@@ -12,24 +12,34 @@
 </head>
 
 <body>
-	<header>
-		<h1><?=$page_title?></h1>
-		<div class="pull-right" id="login_info">
-		<?php	
-		include_once(realpath('comum.php'));
-		
-		if ( is_session_started() === FALSE ) {
-			session_start();
-		}	
-		
-		if(isset($_SESSION["user_name"])) {
-			// Informações de login
-			echo "<span>Você está logado como " . $_SESSION["user_name"];		
-			echo "<a href='executa_logout.php'> Logout </a></span>";
-		} else {
-			echo "<span><a href='login.php'> Efetuar Login </a></span>";
-		}
-		?>	
-		</div>
-	</header>
-
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.php">AliExpress</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <?php	
+			include_once(realpath('comum.php'));
+			
+			if ( is_session_started() === FALSE ) {
+				session_start();
+			}	
+			
+			if(isset($_SESSION["user_name"])) {
+				// Informações de login
+				echo '<li class="nav-item"><a class="nav-link" href="executa_logout.php">Logout</a></li>';
+				
+			} else {
+				echo '<li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>';
+			}
+		?>
+      </ul>
+      <form class="d-flex" role="procurar">
+        <input class="form-control me-2" type="procurar" placeholder="Procurar" aria-label="Procurar">
+        <button class="btn btn-outline-success" type="submit">Procurar</button>
+      </form>
+    </div>
+  </div>
+</nav>

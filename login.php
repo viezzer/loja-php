@@ -4,7 +4,7 @@ $page_title = "Autenticação Obrigatória";
 // layout do cabeçalho
 include_once "layout/layout_header.php";
 ?>
-<section>
+<div class="container">
 <form action="executa_login.php" method="POST" role="form">
     <legend>Informe seu login e sua senha para entrar</legend>
 
@@ -16,7 +16,7 @@ include_once "layout/layout_header.php";
     </div>
     <button type="submit" class="btn btn-primary">OK</button>
 </form>
-</section>
+</div >
 <?php
 // layout do rodapé
 include_once "layout/layout_footer.php";
