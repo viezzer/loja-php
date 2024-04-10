@@ -1,0 +1,35 @@
+<?php
+
+include_once('DaoFactory.php');
+include_once('PostgresUserDao.php');
+
+class PostgresDaofactory extends DaoFactory {
+
+    // specify your own database credentials
+    private $config;
+    public $conn;
+
+    public function __construct() {
+        $this->config = include('db_config.php');
+    }
+  
+    // get the database connection
+    public function getConnection(){
+  
+        $this->conn = null;
+  
+        try{
+            $this->conn = new PDO("pgsql:host={$this->config['host']};port={$this->config['port']};dbname={$this->config['db_name']}", $this->config['username'], $this->config['password']);
+        }catch(PDOException $exception){
+            echo "Connection error: " . $exception->getMessage();
+        }
+        return $this->conn;
+    }
+
+    public function getUserDao() {
+
+        return new PostgresUserDao($this->getConnection());
+
+    }
+}
+?>

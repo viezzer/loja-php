@@ -1,0 +1,9 @@
+<?php
+return array(
+    'host' => 'localhost',
+    'db_name' => '',
+    'port' => '5432',
+    'username' => 'postgres',
+    'password' => '',
+);
+?>
