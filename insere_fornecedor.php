@@ -18,14 +18,14 @@ if(isset($_POST['name'], $_POST['description'], $_POST['phone'], $_POST['email']
     // Validações adicionais
     if (empty($name) || empty($description) || empty($phone) || empty($email) || empty($address_id) || empty($street) || empty($number) || empty($neighborhood) || empty($zip_code) || empty($city) || empty($state)) {
         // Se algum campo obrigatório estiver vazio, redireciona de volta ao formulário
-        header("Location: novo_supplier.php?error=empty");
+        header("Location: novo_fornecedor.php?error=empty");
         exit;
     }
 
     // Exemplo de validação de formato de e-mail
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         // Se o e-mail não estiver no formato correto, redireciona com um erro
-        header("Location: novo_supplier.php?error=invalid_email");
+        header("Location: novo_fornecedor.php?error=invalid_email");
         exit;
     }
     
@@ -37,7 +37,9 @@ if(isset($_POST['name'], $_POST['description'], $_POST['phone'], $_POST['email']
     // Cria o objeto fornecedor e insere no banco de dados
     $supplier = new Supplier(null, $name, $description, $phone, $email, $address);
     $supplierDao = $factory->getSupplierDao();
-    $supplierDao->insert($supplier);
+    if(!$supplierDao->insert($supplier)) {
+        header("Location: novo_fornecedor.php?error=database_error");
+    }
     
     // Redireciona para a página de listagem de fornecedores
     header("Location: lista_fornecedores.php");
@@ -45,7 +47,7 @@ if(isset($_POST['name'], $_POST['description'], $_POST['phone'], $_POST['email']
 
 } else {
     // Se algum campo estiver faltando, redireciona de volta ao formulário
-    header("Location: novo_supplier.php?error=missing_fields");
+    header("Location: novo_fornecedor.php?error=missing_fields");
     exit;
 }
 

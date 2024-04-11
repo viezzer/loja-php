@@ -2,7 +2,8 @@
 
 include_once('SupplierDao.php');
 include_once('PostgresDao.php');
-include_once(realpath('model/Supplier.php'));
+include_once('model/Supplier.php');
+// include_once(realpath('model/Address.php'));
 
 class PostgresSupplierDao extends PostgresDao implements SupplierDao {
 
@@ -10,22 +11,44 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
     
     public function insert($supplier) {
 
-        $query = "INSERT INTO " . $this->table_name . 
-        " (name, description, phone, email, address_id) VALUES" .
-        " (:name, :description, :phone, :email, :address_id)";
+        // Inicia a transação
+        $this->conn->beginTransaction();
 
-        $stmt = $this->conn->prepare($query);
+        try {
+            // Primeiro, insere o endereço
+            $addressDao = new PostgresAddressDao($this->conn);
+            $address_id = $addressDao->insert($supplier->getAddress());
 
-        // bind values
-        $stmt->bindValue(":name", $supplier->getName());
-        $stmt->bindValue(":description", $supplier->getDescription());
-        $stmt->bindValue(":phone", $supplier->getPhone());
-        $stmt->bindValue(":email", $supplier->getEmail());
-        $stmt->bindValue(":address_id", $supplier->getAddressId());
+            if ($address_id === false) {
+                throw new Exception("Falha ao inserir o endereço.");
+            }
 
-        if($stmt->execute()){
-            return true;
-        } else {
+            // Com o ID do endereço obtido, insere o fornecedor
+            $query = "INSERT INTO " . $this->table_name . 
+            " (name, description, phone, email, address_id) VALUES" .
+            " (:name, :description, :phone, :email, :address_id)";
+
+            $stmt = $this->conn->prepare($query);
+
+            // bind values
+            $stmt->bindValue(":name", $supplier->getName());
+            $stmt->bindValue(":description", $supplier->getDescription());
+            $stmt->bindValue(":phone", $supplier->getPhone());
+            $stmt->bindValue(":email", $supplier->getEmail());
+            $stmt->bindValue(":address_id", $address_id);
+
+            if($stmt->execute()){
+                // Se tudo ocorrer bem, commita a transação
+                $this->conn->commit();
+                return true;
+            } else {
+                // Em caso de falha, rollback da transação
+                $this->conn->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            // Em caso de exceção, rollback da transação
+            $this->conn->rollBack();
             return false;
         }
 

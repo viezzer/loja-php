@@ -13,8 +13,8 @@ include_once(realpath("layout/layout_header.php"));
             $error_messages = [
                 'empty' => 'Por favor, preencha todos os campos.',
                 'invalid_email' => 'E-mail inválido.',
-                'missing_fields' => 'Alguns campos estão faltando. Por favor, preencha todos os campos.'
-                // Adicione mais mensagens de erro conforme necessário
+                'missing_fields' => 'Alguns campos estão faltando. Por favor, preencha todos os campos.',
+                'database_error' => 'Erro no servidor.'
             ];
 
             // Verifica se a chave 'error' existe no array de mensagens de erro
