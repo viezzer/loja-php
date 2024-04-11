@@ -29,6 +29,7 @@
 			
 			if(isset($_SESSION["user_name"])) {
 				// Informações de login
+				echo '<li class="nav-item"><a class="nav-link" href="usuarios.php">Usuários</a></li>';
 				echo '<li class="nav-item"><a class="nav-link" href="executa_logout.php">Logout</a></li>';
 				
 			} else {

@@ -17,9 +17,10 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         $stmt = $this->conn->prepare($query);
 
         // bind values 
-        $stmt->bindParam(":login", $user->getLogin());
-        $stmt->bindParam(":password", md5($user->getPassword()));
-        $stmt->bindParam(":name", $user->getName());
+        var_dump($user);
+        $stmt->bindValue(":login", $user->getLogin());
+        $stmt->bindValue(":password", md5($user->getPassword()));
+        $stmt->bindValue(":name", $user->getName());
 
         if($stmt->execute()){
             return true;

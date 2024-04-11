@@ -1,6 +1,6 @@
 <aside>
 	<footer>
-		<p>Loja PHP : 2021</p>
+		<p>Rodapé : 2021</p>
 	</footer>
 
 </body>
