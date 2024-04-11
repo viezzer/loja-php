@@ -32,11 +32,11 @@ CREATE TABLE suppliers (
     description VARCHAR(255),
     phone VARCHAR(255),
     email VARCHAR(30) NOT NULL UNIQUE,
-    adress_id INTEGER NOT NULL,
+    address_id INTEGER NOT NULL,
     CONSTRAINT fk_adress FOREIGN KEY (adress_id) REFERENCES adresses(id)
 );
 
-INSERT INTO suppliers (name, description, phone, email, adress_id)
+INSERT INTO suppliers (name, description, phone, email, address_id)
 VALUES 
     ('Loja de Eletrônicos A', 'Especializada em eletrônicos para casa', '(54) 1234-5678', 'eletronicosA@caxias.com', 1),
     ('Distribuidora de Alimentos B', 'Fornecedora de alimentos para restaurantes', '(54) 9876-5432', 'alimentosB@caxias.com', 2),
