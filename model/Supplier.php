@@ -33,4 +33,5 @@ class Supplier {
     public function setPhone($phone) { $this->phone = $phone; }
     public function setEmail($email) { $this->email = $email; }
     public function setAddress($address) { $this->address = $address; }
+
 }

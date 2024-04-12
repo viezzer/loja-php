@@ -103,14 +103,11 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         
         $supplier = null;
 
-        $query = "SELECT
-                    id, name, description, phone, email, address_id
-                FROM
-                    " . $this->table_name . "
-                WHERE
-                    id = ?
-                LIMIT
-                    1 OFFSET 0";
+        $query = "SELECT s.id, s.name, s.description, s.phone, s.email, a.street, a.number, a.complement, a.neighborhood, a.zip_code, a.city,a.state	
+                    FROM ".$this->table_name." as s
+                    JOIN addresses as a ON a.id=s.address_id 
+                    WHERE s.id = ?
+                    LIMIT 1 OFFSET 0";
      
         $stmt = $this->conn->prepare( $query );
         $stmt->bindParam(1, $id);
@@ -118,7 +115,17 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
      
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $supplier = new Supplier($row['id'], $row['name'], $row['description'], $row['phone'], $row['email'], $row['address_id']);
+            $address = new Address(
+                null,
+                $row['street'],
+                $row['number'],
+                $row['complement'],
+                $row['neighborhood'],
+                $row['zip_code'],
+                $row['city'],
+                $row['state']
+            );
+            $supplier = new Supplier($row['id'], $row['name'], $row['description'], $row['phone'], $row['email'], $address);
         } 
      
         return $supplier;

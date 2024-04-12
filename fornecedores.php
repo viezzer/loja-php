@@ -18,6 +18,7 @@ $suppliers = $dao->getAllWithAddress();
     <!-- listagem de fornecedores -->
     <div class="row">
         <div class="col">
+            <legend>Lista de fornecedores</legend>
             <?php
                 if($suppliers) {
                     echo '<table class="table table-hover table-striped table-bordered table-responsive">';
