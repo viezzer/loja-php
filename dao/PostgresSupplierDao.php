@@ -12,7 +12,7 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
     public function insert($supplier) {
 
         // Inicia a transação
-        $this->conn->beginTransaction();
+        $this->conn->beginTransaction(); 
 
         try {
             // Primeiro, insere o endereço
@@ -165,6 +165,46 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
             $suppliers[] = new Supplier($id, $name, $description, $phone, $email, $address_id);
+        }
+        
+        return $suppliers;
+    }
+
+    public function getAllWithAddress() {
+
+        $suppliers = array();
+
+        $query = "SELECT s.id, s.name, s.description, s.phone, s.email, a.street, a.number, a.complement, a.neighborhood, a.zip_code, a.city,a.state	
+                    FROM ".$this->table_name." as s
+                    JOIN addresses as a ON a.id=s.address_id 
+                    ORDER BY s.id ASC";
+     
+        $stmt = $this->conn->prepare( $query );
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $address = new Address(
+                null,
+                $row['street'],
+                $row['number'],
+                $row['complement'],
+                $row['neighborhood'],
+                $row['zip_code'],
+                $row['city'],
+                $row['state']
+            );
+            // var_dump($address);
+            // exit;
+            $supplier = new Supplier(
+                $row['id'],
+                $row['name'],
+                $row['description'],
+                $row['phone'],
+                $row['email'],
+                $address
+            );
+    
+            $suppliers[] = $supplier;
         }
         
         return $suppliers;

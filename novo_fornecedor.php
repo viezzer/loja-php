@@ -5,22 +5,21 @@ include_once(realpath("layout/layout_header.php"));
  ?>
 <div class="container py-4">
     <?php
-        // Verifica se a variável 'error' está presente na URL
-        if (isset($_GET['error'])) {
-            $error = $_GET['error'];
+        // Verifica se a variável 'msg' está presente na URL
+        if (isset($_GET['msg'])) {
+            $msg = $_GET['msg'];
 
-            // Mensagem de erro correspondente ao valor da variável 'error'
-            $error_messages = [
+            // Mensagem de erro correspondente ao valor da variável 'msg'
+            $messages = [
                 'empty' => 'Por favor, preencha todos os campos.',
-                'invalid_email' => 'E-mail inválido.',
                 'missing_fields' => 'Alguns campos estão faltando. Por favor, preencha todos os campos.',
                 'database_error' => 'Erro no servidor.'
             ];
 
-            // Verifica se a chave 'error' existe no array de mensagens de erro
-            if (array_key_exists($error, $error_messages)) {
+            // Verifica se a chave 'msg' existe no array de mensagens de erro
+            if (array_key_exists($msg, $messages)) {
                 // Exibe a mensagem de erro
-                echo '<div class="alert alert-warning" role="alert">' . $error_messages[$error] . '</div>';
+                echo '<div class="alert alert-warning" role="alert">' . $messages[$msg] . '</div>';
             } else {
                 // Mensagem de erro padrão caso o código de erro não seja reconhecido
                 echo '<div class="alert alert-warning" role="alert">Erro desconhecido.</div>';
@@ -40,7 +39,7 @@ include_once(realpath("layout/layout_header.php"));
             </div>
             <div class="col-lg-6">
                 <label class="form-label">Descrição</label>
-                <textarea class="form-control" aria-label="Descrição" name='descricao'></textarea>
+                <textarea class="form-control" aria-label="Descrição" name='description'></textarea>
             </div>
             <div class="col-lg-6">
                 <label for="inputPhone" class="form-label">Telefone</label>
@@ -49,11 +48,11 @@ include_once(realpath("layout/layout_header.php"));
             <h1 class="modal-title fs-5" id="newSupplierModal">Endereço</h1>
             <div class="col-lg-5">
                 <label for="inputStreet" class="form-label">Rua</label>
-                <input type="text" class="form-control" id="inputStreet" >
+                <input type="text" class="form-control" id="inputStreet" name="street">
             </div>
             <div class="col-lg-4">
                 <label for="inputNeighborhood" class="form-label">Bairro</label>
-                <input type="text" class="form-control" id="inputNeighborhood">
+                <input type="text" class="form-control" id="inputNeighborhood" name="neighborhood">
             </div>
             <div class="col-lg-3">
                 <label for="inputNumber" class="form-label">Numero</label>
@@ -70,6 +69,10 @@ include_once(realpath("layout/layout_header.php"));
             <div class="col-lg-3">
                 <label for="inputZip" class="form-label">Código postal</label>
                 <input type="text" class="form-control" id="inputZip" name="zip_code">
+            </div>
+            <div class="col">
+                <label for="inputComplement" class="form-label">Complemento</label>
+                <input type="text" class="form-control" id="inputComplement" name="complement">
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Cadastrar</button>

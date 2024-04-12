@@ -6,7 +6,7 @@ include_once "layout/layout_header.php";
 include_once "fachada.php";
 // procura fornecedores
 $dao = $factory->getSupplierDao();
-$suppliers = $dao->getAll();
+$suppliers = $dao->getAllWithAddress();
 
 ?>
 <div class="container py-4">
@@ -20,21 +20,32 @@ $suppliers = $dao->getAll();
         <div class="col">
             <?php
                 if($suppliers) {
-                    echo '<table class="table table-striped table-bordered table-responsive">';
+                    echo '<table class="table table-hover table-striped table-bordered table-responsive">';
                         echo '<thead>';
                             echo '<tr>';
                                 echo '<th scope="col">ID</th>';
                                 echo '<th scope="col">Nome</th>';
                                 echo '<th scope="col">E-mail</th>';
+                                echo '<th scope="col">Telefone</th>';
+                                echo '<th scope="col">Cidade</th>';
+                                echo '<th scope="col">Estado</th>';
+                                echo '<th scope="col">CEP</th>';
                             echo '</tr>';
                         echo '</thead>';
                     echo '<tbody>';
                     foreach($suppliers as $supplier) {
+                        $address = $supplier->getAddress();
+                        // echo "<a href='fornecedor.php?id={$supplier->getId()}'>";
                         echo '<tr>';
-                        echo "<th scope='row'>{$supplier->getId()}</th>";
+                        echo "<th scope='row'><a href='fornecedor.php?id={$supplier->getId()}'>{$supplier->getId()}</a></th>";
                         echo "<td>{$supplier->getName()}</td>";
                         echo "<td>{$supplier->getEmail()}</td>";
+                        echo "<td>{$supplier->getPhone()}</td>";
+                        echo "<td>{$address->getCity()}</td>";
+                        echo "<td>{$address->getState()}</td>";
+                        echo "<td>{$address->getZipCode()}</td>";
                         echo '</tr>';
+                        // echo '</a>';
                     }
                     echo '</tbody>';
                     echo '</table>';

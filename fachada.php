@@ -2,6 +2,7 @@
 
 include_once('model/User.php');
 include_once('model/Supplier.php');
+include_once('model/Address.php');
 include_once('dao/UserDao.php');
 include_once('dao/SupplierDao.php');
 include_once('dao/AddressDao.php');
