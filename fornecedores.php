@@ -19,17 +19,19 @@ $suppliers = $dao->getAllWithAddress();
 
                     // Mensagem de erro correspondente ao valor da variável 'msg'
                     $messages = [
+                        'supplier_deleted' => 'Fornecedor deletado.',
                         'supplier_updated' => 'Fornecedor atualizado.',
                         'missing_fields' => 'Alguns campos estão faltando. Por favor, preencha todos os campos.',
                         'database_error' => 'Erro no servidor.',
                         'address_update_error' => 'Erro ao atualizar endereço.',
-                        'supplier_update_error' => 'Erro ao atualizar Fornecedor.'
+                        'supplier_update_error' => 'Erro ao atualizar Fornecedor.',
+                        'supplier_delete_error' => 'Erro ao deletar fornecedor'
                     ];
 
                     // Verifica se a chave 'msg' existe no array de mensagens de erro
                     if (array_key_exists($msg, $messages)) {
                         // Exibe a mensagem de erro
-                        echo '<div class="alert alert-succsess" role="alert">' . $messages[$msg] . '</div>';
+                        echo '<div class="alert alert-warning" role="alert">' . $messages[$msg] . '</div>';
                     } else {
                         // Mensagem de erro padrão caso o código de erro não seja reconhecido
                         echo '<div class="alert alert-warning" role="alert">Erro desconhecido.</div>';

@@ -25,6 +25,8 @@ $address = $supplier->getAddress();
                 echo "<a class='btn btn-secondary btn-sm' href='fornecedores.php'>Voltar</a>";
                 if($edit=='disabled') {
                     echo "<a href='?id={$_GET['id']}&edit= ' class='btn btn-primary btn-sm mx-2'>Editar</a>";
+                } else {
+                    echo "<a href='excluir_fornecedor.php?id={$_GET['id']}' class='btn btn-danger btn-sm mx-2'>Excluir</a>";
                 }
             ?>
         </div>
