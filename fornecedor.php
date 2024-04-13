@@ -41,7 +41,9 @@ $address = $supplier->getAddress();
                     $messages = [
                         'empty' => 'Por favor, preencha todos os campos.',
                         'missing_fields' => 'Alguns campos estão faltando. Por favor, preencha todos os campos.',
-                        'database_error' => 'Erro no servidor.'
+                        'database_error' => 'Erro no servidor.',
+                        'address_update_error' => 'Erro ao atualizar endereço.',
+                        'supplier_update_error' => 'Erro ao atualizar Fornecedor.'
                     ];
 
                     // Verifica se a chave 'msg' existe no array de mensagens de erro
@@ -54,7 +56,7 @@ $address = $supplier->getAddress();
                     }
                 }
                 echo '
-                <form action="insere_fornecedor.php" method="post">
+                <form action="atualiza_fornecedor.php" method="post">
                     <legend>Cadastro de fornecedor</legend>
                     <input type="hidden" value="'.$supplier->getId().'" name="id">
                     <div class="row g-3 mb-3">
@@ -75,6 +77,7 @@ $address = $supplier->getAddress();
                             <input type="text" class="form-control" id="inputPhone" name="phone" value="'.$supplier->getPhone().'" '.$edit.'>
                         </div>
                         <h1 class="modal-title fs-5" id="newSupplierModal">Endereço</h1>
+                        <input type="hidden" value="'.$address->getId().'" name="address_id">
                         <div class="col-lg-5">
                             <label for="inputStreet" class="form-label">Rua</label>
                             <input type="text" class="form-control" id="inputStreet" name="street" value="'.$address->getStreet().'" '.$edit.'>

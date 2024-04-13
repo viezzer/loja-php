@@ -76,7 +76,7 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
     }
 
     public function update(&$supplier) {
-
+        $address = $supplier->getAddress();
         $query = "UPDATE " . $this->table_name . 
         " SET name = :name, description = :description, phone = :phone, email = :email, address_id = :address_id" .
         " WHERE id = :id";
@@ -84,12 +84,12 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         $stmt = $this->conn->prepare($query);
 
         // bind parameters
-        $stmt->bindParam(":name", $supplier->getName());
-        $stmt->bindParam(":description", $supplier->getDescription());
-        $stmt->bindParam(":phone", $supplier->getPhone());
-        $stmt->bindParam(":email", $supplier->getEmail());
-        $stmt->bindParam(":address_id", $supplier->getAddressId());
-        $stmt->bindParam(':id', $supplier->getId());
+        $stmt->bindValue(":name", $supplier->getName());
+        $stmt->bindValue(":description", $supplier->getDescription());
+        $stmt->bindValue(":phone", $supplier->getPhone());
+        $stmt->bindValue(":email", $supplier->getEmail());
+        $stmt->bindValue(":address_id", $address->getId());
+        $stmt->bindValue(':id', $supplier->getId());
 
         // execute the query
         if($stmt->execute()){
@@ -103,7 +103,7 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         
         $supplier = null;
 
-        $query = "SELECT s.id, s.name, s.description, s.phone, s.email, a.street, a.number, a.complement, a.neighborhood, a.zip_code, a.city,a.state	
+        $query = "SELECT s.id, s.name, s.description, s.phone, s.email, a.id as aid, a.street, a.number, a.complement, a.neighborhood, a.zip_code, a.city,a.state	
                     FROM ".$this->table_name." as s
                     JOIN addresses as a ON a.id=s.address_id 
                     WHERE s.id = ?
@@ -116,7 +116,7 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
             $address = new Address(
-                null,
+                $row['aid'],
                 $row['street'],
                 $row['number'],
                 $row['complement'],

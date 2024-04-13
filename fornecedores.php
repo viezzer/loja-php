@@ -10,6 +10,34 @@ $suppliers = $dao->getAllWithAddress();
 
 ?>
 <div class="container py-4">
+    <div class="row">
+        <div class="col">
+        <?php
+                // Verifica se a variável 'msg' está presente na URL
+                if (isset($_GET['msg'])) {
+                    $msg = $_GET['msg'];
+
+                    // Mensagem de erro correspondente ao valor da variável 'msg'
+                    $messages = [
+                        'supplier_updated' => 'Fornecedor atualizado.',
+                        'missing_fields' => 'Alguns campos estão faltando. Por favor, preencha todos os campos.',
+                        'database_error' => 'Erro no servidor.',
+                        'address_update_error' => 'Erro ao atualizar endereço.',
+                        'supplier_update_error' => 'Erro ao atualizar Fornecedor.'
+                    ];
+
+                    // Verifica se a chave 'msg' existe no array de mensagens de erro
+                    if (array_key_exists($msg, $messages)) {
+                        // Exibe a mensagem de erro
+                        echo '<div class="alert alert-succsess" role="alert">' . $messages[$msg] . '</div>';
+                    } else {
+                        // Mensagem de erro padrão caso o código de erro não seja reconhecido
+                        echo '<div class="alert alert-warning" role="alert">Erro desconhecido.</div>';
+                    }
+                }
+            ?>
+        </div>
+    </div>
     <div class="row mb-3">
         <div class="col">
             <a class="btn btn-success btn-sm" href="novo_fornecedor.php">Novo Fornecedor</a>

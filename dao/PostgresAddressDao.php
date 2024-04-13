@@ -63,14 +63,14 @@ class PostgresAddressDao extends PostgresDao implements AddressDao {
         $stmt = $this->conn->prepare($query);
 
         // bind parameters
-        $stmt->bindParam(":street", $address->getStreet());
-        $stmt->bindParam(":number", $address->getNumber());
-        $stmt->bindParam(":complement", $address->getComplement());
-        $stmt->bindParam(":neighborhood", $address->getNeighborhood());
-        $stmt->bindParam(":zip_code", $address->getZipCode());
-        $stmt->bindParam(":city", $address->getCity());
-        $stmt->bindParam(":state", $address->getState());
-        $stmt->bindParam(':id', $address->getId());
+        $stmt->bindValue(":street", $address->getStreet());
+        $stmt->bindValue(":number", $address->getNumber());
+        $stmt->bindValue(":complement", $address->getComplement());
+        $stmt->bindValue(":neighborhood", $address->getNeighborhood());
+        $stmt->bindValue(":zip_code", $address->getZipCode());
+        $stmt->bindValue(":city", $address->getCity());
+        $stmt->bindValue(":state", $address->getState());
+        $stmt->bindValue(':id', $address->getId());
 
         // execute the query
         if($stmt->execute()){
