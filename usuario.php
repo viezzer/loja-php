@@ -18,6 +18,7 @@ $user = $dao->getById($_GET['id']);
 
 ?>
 <div class="container py-4">
+    <!-- botões -->
     <div class="row mb-3">
         <div class="col">
             <?php
