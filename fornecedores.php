@@ -6,8 +6,13 @@ include_once "layout/layout_header.php";
 include_once "fachada.php";
 // procura fornecedores
 $dao = $factory->getSupplierDao();
-$suppliers = $dao->getAllWithAddress();
+//verifica se existe inps de pesquisa
+if(isset($_GET['search_id']) || isset($_GET['search_name'])) {
 
+    $suppliers = $dao->getAllBySearchedInputs($_GET['search_id'], $_GET['search_name']);
+} else {
+    $suppliers = $dao->getAllWithAddress();
+}
 ?>
 <div class="container py-4">
     <div class="row">
@@ -41,8 +46,23 @@ $suppliers = $dao->getAllWithAddress();
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col">
-            <a class="btn btn-success btn-sm" href="novo_fornecedor.php">Novo Fornecedor</a>
+        <div class="col-md-6">
+            <a class="btn btn-success btn-sm mb-2" href="novo_fornecedor.php">Novo Fornecedor</a>
+        </div>
+        <div class="col-md-6">
+            <form action="fornecedores.php" method="get">
+                <div class="row">
+                    <div class="col-lg-2 mb-2">
+                        <button type='submit' class='btn btn-sm btn-primary '>Pesquisar</button>
+                    </div>
+                    <div class="col-lg-7">
+                        <input type="text" class="form-control form-control-sm mb-2" id='search_name' name='search_name' placeholder="Nome">
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control form-control-sm mb-2" id='search_id' name='search_id' placeholder="ID">
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <!-- listagem de fornecedores -->
@@ -51,7 +71,8 @@ $suppliers = $dao->getAllWithAddress();
             <legend>Lista de fornecedores</legend>
             <?php
                 if($suppliers) {
-                    echo '<table class="table table-hover table-striped table-bordered table-responsive">';
+                    echo '<div class="table-responsive-lg">';
+                    echo '<table class="table table-hover table-striped table-bordered">';
                         echo '<thead>';
                             echo '<tr>';
                                 echo '<th scope="col">ID</th>';
@@ -80,6 +101,7 @@ $suppliers = $dao->getAllWithAddress();
                     }
                     echo '</tbody>';
                     echo '</table>';
+                    echo '</div>';
                 } else {
                     echo 'Nenhum fornecedor encontrado';
                 }

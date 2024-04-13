@@ -216,5 +216,54 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         
         return $suppliers;
     }
+
+    public function getAllBySearchedInputs($search_id, $search_name) {
+        $suppliers = array();
+
+        $query = "SELECT s.id, s.name, s.description, s.phone, s.email, a.street, a.number, a.complement, a.neighborhood, a.zip_code, a.city,a.state	
+                    FROM ".$this->table_name." as s
+                    JOIN addresses as a ON a.id=s.address_id 
+                    WHERE true";
+        // verifica se input do id foi preenchido
+        if(!empty($search_id)) {
+            $query.= " AND s.id = $search_id";
+        }
+        // verifica se input do nome foi preenchido
+        if(!empty($search_name)) {
+            $query.= " AND s.name LIKE '%$search_name%'";
+            // print_r($query);
+            // exit;
+        }
+        //ordena por id crescente
+        $query.= " ORDER BY s.id ASC";
+        $stmt = $this->conn->prepare( $query );
+        $stmt->execute();
+        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $address = new Address(
+                null,
+                $row['street'],
+                $row['number'],
+                $row['complement'],
+                $row['neighborhood'],
+                $row['zip_code'],
+                $row['city'],
+                $row['state']
+            );
+
+            $supplier = new Supplier(
+                $row['id'],
+                $row['name'],
+                $row['description'],
+                $row['phone'],
+                $row['email'],
+                $address
+            );
+    
+            $suppliers[] = $supplier;
+        }
+        
+        return $suppliers;
+    }
 }
 ?>
