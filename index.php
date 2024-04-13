@@ -4,7 +4,7 @@ $page_title = "Loja";
 include_once "layout/layout_header.php";
  ?>
 	<div class='container'>
-		<nav>
+		<!-- <nav>
 			<ul>
 				<li>Item do menu</li>
 			</ul>
@@ -12,7 +12,7 @@ include_once "layout/layout_header.php";
 		<article>
 			<h2>Título do artigo 1</h2>
 			<p>Conteúdo do artigo.</p>
-		</article>
+		</article> -->
 	</div>
 <?php
 // layout do rodapé

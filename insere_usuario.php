@@ -21,6 +21,8 @@ if(isset($_POST['login'], $_POST['password'], $_POST['name'])) {
         exit;
     }
     
+    // //criptografa a senha
+    $password = md5($_POST["password"]);
     // Cria o objeto usuário e insere no banco de dados
     $user = new User(null,$login,$password,$name);
     $dao = $factory->getUserDao();

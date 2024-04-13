@@ -6,7 +6,7 @@ include_once "layout/layout_header.php";
 include_once "fachada.php";
 // procura fornecedores
 $dao = $factory->getSupplierDao();
-//verifica se existe inps de pesquisa
+//verifica se existe inputs de pesquisa
 if(isset($_GET['search_id']) || isset($_GET['search_name'])) {
 
     $suppliers = $dao->getAllBySearchedInputs($_GET['search_id'], $_GET['search_name']);

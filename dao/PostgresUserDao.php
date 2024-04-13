@@ -19,7 +19,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         // bind values 
         var_dump($user);
         $stmt->bindValue(":login", $user->getLogin());
-        $stmt->bindValue(":password", md5($user->getPassword()));
+        $stmt->bindValue(":password", $user->getPassword());
         $stmt->bindValue(":name", $user->getName());
 
         if($stmt->execute()){
@@ -92,7 +92,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
      
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $user = new User($row['id'],$row['login'], $row['name'], $row['password']);
+            $user = new User($row['id'],$row['login'], $row['password'], $row['name']);
         } 
      
         return $user;
@@ -155,6 +155,41 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
             $users[] = new User($id,$login,$password,$name);
+        }
+        
+        return $users;
+    }
+
+    public function getAllBySearchedInputs($search_id, $search_name) {
+        $users = array();
+
+        $query = "SELECT id, login, password, name	
+                    FROM ".$this->table_name." 
+                    WHERE true";
+        // verifica se input do id foi preenchido
+        if(!empty($search_id)) {
+            $query.= " AND id = $search_id";
+        }
+        // verifica se input do nome foi preenchido
+        if(!empty($search_name)) {
+            $query.= " AND name LIKE '%$search_name%'";
+            // print_r($query);
+            // exit;
+        }
+        //ordena por id crescente
+        $query.= " ORDER BY id ASC";
+        $stmt = $this->conn->prepare( $query );
+        $stmt->execute();
+        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $user = new User(
+                $row['id'],
+                $row['login'],
+                $row['password'],
+                $row['name']
+            );
+    
+            $users[] = $user;
         }
         
         return $users;
