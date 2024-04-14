@@ -49,7 +49,7 @@ if($user) {
 
 if($problems==TRUE) {
     // header("Location: index.php");
-    var_dump($user); 
+    var_dump($user, $password); 
     exit; 
 }
 ?>

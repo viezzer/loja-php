@@ -9,7 +9,10 @@ class PostgresUserDao extends PostgresDao implements UserDao {
     private $table_name = 'users';
     
     public function insert($user) {
-
+        // tem que verificar se o login do usuário já não existe
+        if($this->getByLogin($user->getLogin())!=null) {
+            return false;
+        }
         $query = "INSERT INTO " . $this->table_name . 
         " (login, password, name) VALUES" .
         " (:login, :password, :name)";

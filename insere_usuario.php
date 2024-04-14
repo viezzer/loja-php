@@ -26,11 +26,14 @@ if(isset($_POST['login'], $_POST['password'], $_POST['name'])) {
     // Cria o objeto usuário e insere no banco de dados
     $user = new User(null,$login,$password,$name);
     $dao = $factory->getUserDao();
-    $dao->insert($user);
-    
-    // Redireciona para a página de login
-    header("Location: login.php");
-    exit;
+
+    if($dao->insert($user)) {
+        // Redireciona para a página de login
+        header("Location: login.php");
+        exit;
+
+    }
+    echo 'redirecionar para página de cadastro com mensagem de erro que login ja existe';
 
 } else {
     // Se algum campo estiver faltando, redireciona de volta ao formulário
