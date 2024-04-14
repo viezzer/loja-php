@@ -104,7 +104,7 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
 
         $product = null;
 
-        $query = "SELECT p.id, p.name, p.description, s.price, s.quantity, sup.id" .
+        $query = "SELECT p.id, p.name , p.description, s.price, s.quantity, sup.id as sup_id, sup.name as sup_name" .
                  " FROM " . $this->table_name ." as p 
                  LEFT JOIN stocks as s ON s.product_id=p.id 
                  JOIN suppliers as sup ON sup.id=p.supplier_id 
@@ -119,7 +119,9 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
-            $product = new Product($row['id'], $row['name'], $row['description'], $row['price'], $row['quantity']);
+            $supplier = new Supplier($row['sup_id'],$row['sup_name'],null,null,null,null);
+            $stock = new Stock(null,$row['quantity'], $row['price'],$row['id']);
+            $product = new Product($row['id'], $row['name'], $row['description'], $supplier, $stock);
         }
 
         return $product;

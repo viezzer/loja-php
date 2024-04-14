@@ -17,7 +17,7 @@ $suppliers = $supplierDao->getAll();
 
 $productDao = $factory->getProductDao();
 $product = $productDao->getById($_GET['id']);
-$supplier_id = $product->getSupplier()->getId();
+$supplier = $product->getSupplier();
 $stock = $product->getStock();
 
 ?>
@@ -75,10 +75,12 @@ $stock = $product->getStock();
                         </div>
                         <div class="col-lg-6">
                             <label for="inputSupplier" class="form-label">Fornecedor</label>';
-                            // <select class="form-select" id="inputSupplier" name="supplier_id" '.$edit.'>
-                            //     <option value="'.$supplier->getId().'">'.$supplier->getName().'</option>
-                            //     <!-- You can dynamically populate the options from your database -->
-                            // </select>
+                            echo "<select class='form-select' id='inputSupplier' name='supplier_id' $edit>";
+                            echo "<option value='{$supplier->getId()}'>{$supplier->getName()}</option>";
+                                foreach($suppliers as $sup) {
+                                    echo "<option value='{$sup->getId()}'>{$sup->getName()}</option>";
+                                };
+                            echo '</select>';
                         echo '</div>
                         <div class="col-lg-6">
                             <label for="inputQuantity" class="form-label">Quantidade</label>
