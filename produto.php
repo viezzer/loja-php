@@ -88,7 +88,7 @@ $stock = $product->getStock();
                         </div>
                         <div class="col-lg-6">
                             <label for="inputPrice" class="form-label">Preço</label>
-                            <input type="number" class="form-control" id="inputPrice" name="price" value="'.$stock->getPrice().'" '.$edit.'>
+                            <input type="text" class="form-control" id="inputPrice" name="price" value="'.$stock->getPrice().'" '.$edit.'>
                         </div>
                     </div>';
                     if($edit!='disabled') {

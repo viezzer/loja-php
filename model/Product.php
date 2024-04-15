@@ -31,6 +31,6 @@ class Product {
     public function setName($name) { $this->name = $name; }
     public function setDescription($description) { $this->description = $description; }
     public function setSupplier($supplier) { $this->supplier = $supplier; }
-    public function setStock($stock) { $this->supplier = $stock; }
+    public function setStock($stock) { $this->stock = $stock; }
     // public function setImage($image) { $this->image = $image; }
 }

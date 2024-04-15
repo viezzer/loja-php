@@ -44,5 +44,8 @@ class PostgresDaofactory extends DaoFactory {
     public function getProductDao() {
         return new PostgresProductDao($this->getConnection());
     }
+    public function getStockDao() {
+        return new PostgresStockDao($this->getConnection());
+    }
 }
 ?>

@@ -79,25 +79,51 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
     }
 
     public function update(&$product) {
-        $query = "UPDATE " . $this->table_name .
-            " SET name = :name, description = :description, price = :price, quantity = :quantity" .
-            " WHERE id = :id";
+        $stock = $product->getStock();
+        $supplier = $product->getSupplier();
 
-        $stmt = $this->conn->prepare($query);
-
-        // bind parameters
-        $stmt->bindValue(":name", $product->getName());
-        $stmt->bindValue(":description", $product->getDescription());
-        $stmt->bindValue(":price", $product->getPrice());
-        $stmt->bindValue(":quantity", $product->getQuantity());
-        $stmt->bindValue(':id', $product->getId());
-
-        // execute the query
-        if ($stmt->execute()) {
-            return true;
+        $this->conn->beginTransaction();
+        //atualiza informações do produto
+        try {
+            $query = "UPDATE " . $this->table_name .
+                " SET name = :name, description = :description, supplier_id = :supplier_id" .
+                " WHERE id = :id";
+    
+            $stmt = $this->conn->prepare($query);
+    
+            // bind parameters
+            $stmt->bindValue(":name", $product->getName());
+            $stmt->bindValue(":description", $product->getDescription());
+            $stmt->bindValue(":supplier_id", $supplier->getId());
+            $stmt->bindValue(":id", $product->getId());
+    
+            // se produto atualizar, atuliazar estoque
+            if ($stmt->execute()) {
+                $stockDao = new PostgresStockDao($this->conn);
+                $stockWithId = $stockDao->getByProductId($product->getId());
+                $stockWithId->setQuantity($stock->getQuantity());
+                $stockWithId->setPrice($stock->getPrice());
+                // var_dump($stockWithId);
+                // exit;
+                $success = $stockDao->update($stockWithId);
+                if($success){
+                    $this->conn->commit();
+                    return true;
+                }
+                // Em caso de falha, rollback da transação
+                throw new Exception("Falha ao inserir o estoque.");
+            }else {
+                // Em caso de falha, rollback da transação
+                $this->conn->rollBack();
+                throw new Exception("Falha ao inserir o produto.");
+            }
+        }catch(Exception $e) {
+            // Em caso de exceção, rollback da transação
+            $this->conn->rollBack();
+            var_dump($e);
+            exit;
+            return false;
         }
-
-        return false;
     }
 
     public function getById($id) {
