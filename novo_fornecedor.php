@@ -4,6 +4,11 @@ $page_title = "Cadastro de fornecedor";
 include_once(realpath("layout/layout_header.php"));
  ?>
 <div class="container py-4">
+    <div class="row mb-3">
+        <div class="col">
+            <a href='fornecedores.php' class='btn btn-sm btn-secondary'>Voltar</a>
+        </div>
+    </div>
     <?php
         // Verifica se a variável 'msg' está presente na URL
         if (isset($_GET['msg'])) {
@@ -31,11 +36,11 @@ include_once(realpath("layout/layout_header.php"));
         <div class="row g-3 mb-3">
             <div class="col-lg-6">
                 <label for="inputName" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="inputName" name='name'>
+                <input type="text" class="form-control" required id="inputName" name='name'>
             </div>
             <div class="col-lg-6">
                 <label for="inputEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="inputEmail" name="email">
+                <input type="email" class="form-control" required id="inputEmail" name="email">
             </div>
             <div class="col-lg-6">
                 <label class="form-label">Descrição</label>
@@ -43,32 +48,32 @@ include_once(realpath("layout/layout_header.php"));
             </div>
             <div class="col-lg-6">
                 <label for="inputPhone" class="form-label">Telefone</label>
-                <input type="text" class="form-control" id="inputPhone" name='phone'>
+                <input type="text" class="form-control" required id="inputPhone" name='phone'>
             </div>
             <h1 class="modal-title fs-5" id="newSupplierModal">Endereço</h1>
             <div class="col-lg-5">
                 <label for="inputStreet" class="form-label">Rua</label>
-                <input type="text" class="form-control" id="inputStreet" name="street">
+                <input type="text" class="form-control" required id="inputStreet" name="street">
             </div>
             <div class="col-lg-4">
                 <label for="inputNeighborhood" class="form-label">Bairro</label>
-                <input type="text" class="form-control" id="inputNeighborhood" name="neighborhood">
+                <input type="text" class="form-control" required id="inputNeighborhood" name="neighborhood">
             </div>
             <div class="col-lg-3">
                 <label for="inputNumber" class="form-label">Numero</label>
-                <input type="number" class="form-control" id="inputNumber" name="number">
+                <input type="number" class="form-control" required id="inputNumber" name="number">
             </div>
             <div class="col-lg-5">
                 <label for="inputCity" class="form-label">Cidade</label>
-                <input type="text" class="form-control" id="inputCity" name="city">
+                <input type="text" class="form-control" required id="inputCity" name="city">
             </div>
             <div class="col-lg-4">
                 <label for="inputState" class="form-label">Estado</label>
-                <input type="text" class="form-control" id="inputState" name="state">
+                <input type="text" class="form-control" required id="inputState" name="state">
             </div>
             <div class="col-lg-3">
                 <label for="inputZip" class="form-label">Código postal</label>
-                <input type="text" class="form-control" id="inputZip" name="zip_code">
+                <input type="text" class="form-control" required id="inputZip" name="zip_code">
             </div>
             <div class="col">
                 <label for="inputComplement" class="form-label">Complemento</label>

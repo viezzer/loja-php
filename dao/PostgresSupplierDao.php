@@ -19,7 +19,7 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
             $addressDao = new PostgresAddressDao($this->conn);
             $address_id = $addressDao->insert($supplier->getAddress());
 
-            if ($address_id === false) {
+            if ($address_id === null) {
                 throw new Exception("Falha ao inserir o endereço.");
             }
 

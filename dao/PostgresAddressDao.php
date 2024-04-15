@@ -26,9 +26,9 @@ class PostgresAddressDao extends PostgresDao implements AddressDao {
         $stmt->bindValue(":state", $address->getState());
 
         if($stmt->execute()){
-            return true;
+            return $this->conn->lastInsertId();
         } else {
-            return false;
+            return null;
         }
 
     }

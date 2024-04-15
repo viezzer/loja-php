@@ -10,6 +10,11 @@ $suppliers = $dao->getAll();
 ?>
 
 <div class="container py-4">
+    <div class="row mb-3">
+        <div class="col">
+            <a href='produtos.php' class='btn btn-sm btn-secondary'>Voltar</a>
+        </div>
+    </div>
     <?php
     // Verifica se a variável 'msg' está presente na URL
     if (isset($_GET['msg'])) {

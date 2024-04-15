@@ -24,9 +24,6 @@ if(isset($_POST['name'], $_POST['phone'], $_POST['email'], $_POST['street'], $_P
     
     // Cria o objeto endereço
     $address = new Address(null, $street, $number, $complement, $neighborhood, $zip_code, $city, $state);
-    $addressDao = $factory->getAddressDao();
-    $addressDao->insert($address);
-    
     // Cria o objeto fornecedor e insere no banco de dados
     $supplier = new Supplier(null, $name, $description, $phone, $email, $address);
     $supplierDao = $factory->getSupplierDao();
