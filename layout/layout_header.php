@@ -31,7 +31,7 @@
 			if(isset($_SESSION["user_name"])) {
 				// Informações de login
 				echo '<li class="nav-item"><a class="nav-link" href="usuarios.php">Usuários</a></li>';
-				echo '<li class="nav-item"><a class="nav-link" href="fornecedores.php">Forncedores</a></li>';
+				echo '<li class="nav-item"><a class="nav-link" href="fornecedores.php">Fornecedores</a></li>';
 				echo '<li class="nav-item"><a class="nav-link" href="produtos.php">Produtos</a></li>';
 				echo "<li class='nav-item dropdown '>
 					<a class='nav-link dropdown-toggle' href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false'>
