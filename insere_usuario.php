@@ -14,18 +14,25 @@ if(isset($_POST['login'], $_POST['password'], $_POST['name'])) {
         exit;
     }
 
-    // Exemplo de validação de tamanho mínimo de senha
     if (strlen($password) < 3) {
         // Se a senha for muito curta, redireciona com um erro
         header("Location: novo_usuario.php?error=password_short");
         exit;
     }
+
+    $dao = $factory->getUserDao();
+    if($dao->getByLogin($login)) {
+        // Se ja existe usuário com este login, redireciona para o formulário
+        header("Location: novo_usuario.php?error=login_already_in_use");
+        exit;
+    }
+
+    
     
     // //criptografa a senha
     $password = md5($_POST["password"]);
     // Cria o objeto usuário e insere no banco de dados
     $user = new User(null,$login,$password,$name);
-    $dao = $factory->getUserDao();
 
     if($dao->insert($user)) {
         // Redireciona para a página de login

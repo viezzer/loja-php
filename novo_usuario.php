@@ -11,6 +11,7 @@ include_once(realpath("layout/layout_header.php"));
 
             // Mensagem de erro correspondente ao valor da variável 'error'
             $error_messages = [
+                'login_already_in_use' => 'Este login já está sendo utilizado.',
                 'empty' => 'Por favor, preencha todos os campos.',
                 'password_short' => 'A senha deve ter pelo menos 3 caracteres.',
                 'missing_fields' => 'Alguns campos estão faltando. Por favor, preencha todos os campos.'
