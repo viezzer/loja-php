@@ -46,10 +46,10 @@
 			}
 		?>
       </ul>
-      <form class="d-flex" role="procurar">
+      <!-- <form class="d-flex" role="procurar">
         <input class="form-control me-2" type="procurar" placeholder="Procurar" aria-label="Procurar">
         <button class="btn btn-outline-success" type="submit">Procurar</button>
-      </form>
+      </form> -->
     </div>
   </div>
 </nav>

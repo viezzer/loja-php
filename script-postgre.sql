@@ -50,7 +50,7 @@ CREATE TABLE products (
     description VARCHAR(255),
     image BYTEA,
     supplier_id INTEGER NOT NULL,
-    CONSTRAINT fk_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+    CONSTRAINT fk_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE CASCADE
 );
 
 INSERT INTO products (name, description, image, supplier_id)
@@ -65,8 +65,8 @@ CREATE TABLE stocks (
     id SERIAL PRIMARY KEY,
     quantity INTEGER NOT NULL,
     price NUMERIC (10,2) NOT NULL,
-    product_id INTEGER UNIQUE NOT NULL,
-    CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(id)
+    product_id INTEGER UNIQUE NOT NULL, 
+    CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 INSERT INTO stocks (quantity, price, product_id)

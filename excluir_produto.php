@@ -2,7 +2,7 @@
 include_once "fachada.php";
 
 if(isset($_GET['id'])) {
-    $productDao = $factory->getUserDao();
+    $productDao = $factory->getProductDao();
     if(!$productDao->removeById($_GET['id'])) {
         header("Location: produtos.php?msg=product_delete_error");
     }
