@@ -5,7 +5,7 @@ include_once "layout/layout_header.php";
  ?>
 	<div class='container'>
 		<!-- Jumbotron -->
-		<div class="jumbotron jumbotron-fluid mb-3">
+		<div class="jumbotron jumbotron-fluid my-3">
 			<div class="container">
 				<h1 class="display-4">Bem-vindo à Sua Loja Online</h1>
 				<p class="lead">A melhor seleção de produtos para você.</p>
