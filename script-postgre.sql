@@ -7,7 +7,7 @@
 
 INSERT INTO users(login, password, name) VALUES ('admin','21232f297a57a5a743894a0e4a801fc3','Admin');
 
-CREATE TABLE adresses (
+CREATE TABLE addresses (
     id SERIAL PRIMARY KEY,
     street VARCHAR(255) NOT NULL, 
     number VARCHAR(255) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE adresses (
     state VARCHAR(255) NOT NULL 
 );
 
-INSERT INTO adresses (street, number, complement, neighborhood, zip_code, city, state) 
+INSERT INTO addresses (street, number, complement, neighborhood, zip_code, city, state) 
 VALUES 
     ('Rua Garibaldi', '123', 'Apto 101', 'Centro', '95010-000', 'Caxias do Sul', 'RS'),
     ('Avenida Júlio de Castilhos', '456', NULL, 'Pio X', '95020-000', 'Caxias do Sul', 'RS'),
@@ -33,7 +33,7 @@ CREATE TABLE suppliers (
     phone VARCHAR(255),
     email VARCHAR(30) NOT NULL UNIQUE,
     address_id INTEGER NOT NULL,
-    CONSTRAINT fk_adress FOREIGN KEY (adress_id) REFERENCES adresses(id)
+    CONSTRAINT fk_adress FOREIGN KEY (address_id) REFERENCES adresses(id)
 );
 
 INSERT INTO suppliers (name, description, phone, email, address_id)
