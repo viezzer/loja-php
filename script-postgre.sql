@@ -33,7 +33,7 @@ CREATE TABLE suppliers (
     phone VARCHAR(255),
     email VARCHAR(30) NOT NULL UNIQUE,
     address_id INTEGER NOT NULL,
-    CONSTRAINT fk_adress FOREIGN KEY (adress_id) REFERENCES adresses(id)
+    CONSTRAINT fk_adress FOREIGN KEY (address_id) REFERENCES adresses(id)
 );
 
 INSERT INTO suppliers (name, description, phone, email, address_id)
