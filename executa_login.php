@@ -48,7 +48,7 @@ if($user) {
 }
 
 if($problems==TRUE) {
-    header("Location: index.php");
+    header("Location: login.php");
     // var_dump($user, $password); 
     exit; 
 }
