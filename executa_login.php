@@ -48,7 +48,7 @@ if($user) {
 }
 
 if($problems==TRUE) {
-    header("Location: login.php");
+    header("Location: login.php?msg=invalid_credentials");
     // var_dump($user, $password); 
     exit; 
 }

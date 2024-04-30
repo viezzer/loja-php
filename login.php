@@ -5,6 +5,30 @@ $page_title = "Autenticação Obrigatória";
 include_once "layout/layout_header.php";
 ?>
 <div class="container py-4">
+<div class="row">
+        <div class="col">
+        <?php
+                // Verifica se a variável 'msg' está presente na URL
+                if (isset($_GET['msg'])) {
+                    $msg = $_GET['msg'];
+
+                    // Mensagem de erro correspondente ao valor da variável 'msg'
+                    $messages = [
+                        'invalid_credentials' => 'Credenciais inválidas.',
+                    ];
+
+                    // Verifica se a chave 'msg' existe no array de mensagens de erro
+                    if (array_key_exists($msg, $messages)) {
+                        // Exibe a mensagem de erro
+                        echo '<div class="alert alert-warning" role="alert">' . $messages[$msg] . '</div>';
+                    } else {
+                        // Mensagem de erro padrão caso o código de erro não seja reconhecido
+                        echo '<div class="alert alert-warning" role="alert">Erro desconhecido.</div>';
+                    }
+                }
+            ?>
+        </div>
+    </div>
     <form action="executa_login.php" method="POST" role="form">
         <legend>Informe seu login e sua senha para entrar ou <a href="novo_usuario.php">crie uma conta</a></legend>
         <div class="mb-3 ">
