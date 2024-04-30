@@ -20,7 +20,7 @@ include_once "layout/layout_header.php";
                     // Verifica se a chave 'msg' existe no array de mensagens de erro
                     if (array_key_exists($msg, $messages)) {
                         // Exibe a mensagem de erro
-                        echo '<div class="alert alert-warning" role="alert">' . $messages[$msg] . '</div>';
+                        echo '<div class="alert alert-danger" role="alert">' . $messages[$msg] . '</div>';
                     } else {
                         // Mensagem de erro padrão caso o código de erro não seja reconhecido
                         echo '<div class="alert alert-warning" role="alert">Erro desconhecido.</div>';
