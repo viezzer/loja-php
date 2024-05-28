@@ -9,7 +9,7 @@ if ( is_session_started() === FALSE ) {
 error_log("LOGIN");
 
 // Verifica se existe os dados da sessão de login 
-if(!isset($_SESSION["user_id"]) || !isset($_SESSION["user_name"])) 
+if(!isset($_SESSION["loggedin"])) 
 { 
     error_log("SEM USUÀRIO LOGADO - Vai para login.php");
     // Usuário não logado! Redireciona para a página de login 
