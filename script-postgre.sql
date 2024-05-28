@@ -33,7 +33,7 @@ CREATE TABLE suppliers (
     phone VARCHAR(255),
     email VARCHAR(30) NOT NULL UNIQUE,
     address_id INTEGER NOT NULL,
-    CONSTRAINT fk_adress FOREIGN KEY (address_id) REFERENCES adresses(id)
+    CONSTRAINT fk_address_supplier FOREIGN KEY (address_id) REFERENCES addresses(id)
 );
 
 INSERT INTO suppliers (name, description, phone, email, address_id)
@@ -76,3 +76,59 @@ VALUES
     (100, 79.99, 3),
     (20, 39.99, 4),
     (200, 9.99, 5);
+
+CREATE TABLE clients (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    phone VARCHAR(255),
+    email VARCHAR(30) NOT NULL UNIQUE,
+    credit_card VARCHAR(30),
+    address_id INTEGER NOT NULL,
+    CONSTRAINT fk_address_client FOREIGN KEY (address_id) REFERENCES addresses(id)
+);
+
+INSERT INTO clients (name, phone, email, credit_card, address_id)
+VALUES 
+    ('João Silva', '(54) 99876-5432', 'joao.silva@exemplo.com', '1234-5678-9012-3456', 1),
+    ('Maria Oliveira', '(54) 98765-4321', 'maria.oliveira@exemplo.com', '2345-6789-0123-4567', 2),
+    ('Carlos Souza', '(54) 97654-3210', 'carlos.souza@exemplo.com', '3456-7890-1234-5678', 3),
+    ('Ana Lima', '(54) 96543-2109', 'ana.lima@exemplo.com', '4567-8901-2345-6789', 4),
+    ('Paula Santos', '(54) 95432-1098', 'paula.santos@exemplo.com', '5678-9012-3456-7890', 5);
+
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    number INTEGER NOT NULL,
+    order_date DATE NOT NULL,
+    delivery_date DATE,
+    status VARCHAR(20) NOT NULL CHECK (status IN ('NOVO', 'ENTREGUE', 'CANCELADO')),
+    client_id INTEGER NOT NULL,
+    CONSTRAINT fk_client_order FOREIGN KEY (client_id) REFERENCES clients(id)
+);
+
+INSERT INTO orders (number, order_date, delivery_date, status, client_id)
+VALUES 
+    (1001, '2024-05-01', '2024-05-05', 'NOVO', 1),
+    (1002, '2024-05-02', '2024-05-06', 'NOVO', 2),
+    (1003, '2024-05-03', '2024-05-07', 'ENTREGUE', 3),
+    (1004, '2024-05-04', '2024-05-08', 'CANCELADO', 4),
+    (1005, '2024-05-05', '2024-05-09', 'NOVO', 5);
+
+
+CREATE TABLE order_items (
+    id SERIAL PRIMARY KEY,
+    quantity INTEGER NOT NULL,
+    price NUMERIC (10, 2) NOT NULL,
+    order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    CONSTRAINT fk_product_order_item FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+INSERT INTO order_items (quantity, price, order_id, product_id)
+VALUES 
+    (1, 2999.99, 1, 1),
+    (2, 199.99, 2, 2),
+    (3, 79.99, 3, 3),
+    (4, 39.99, 4, 4),
+    (5, 9.99, 5, 5);
