@@ -2,7 +2,8 @@
     id SERIAL PRIMARY KEY,
     login VARCHAR(30) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    role VARCHAR(10) NOT NULL CHECK (role IN ('admin', 'client'))
 );
 
 INSERT INTO users(login, password, name) VALUES ('admin','21232f297a57a5a743894a0e4a801fc3','Admin');
