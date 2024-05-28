@@ -79,6 +79,7 @@ if(isset($_GET['search_id']) || isset($_GET['search_name'])) {
                                 echo '<th scope="col">ID</th>';
                                 echo '<th scope="col">Nome</th>';
                                 echo '<th scope="col">Login</th>';
+                                echo '<th scope="col">Tipo de usuário</th>';
                             echo '</tr>';
                         echo '</thead>';
                     echo '<tbody>';
@@ -87,6 +88,7 @@ if(isset($_GET['search_id']) || isset($_GET['search_name'])) {
                         echo "<th scope='row'>{$user->getId()}</th>";
                         echo "<td><a href='usuario.php?id={$user->getId()}'>{$user->getName()}</a></td>";
                         echo "<td>{$user->getLogin()}</td>";
+                        echo "<td>{$user->getRole()}</td>";
                         echo '</tr>';
                     }
                     echo '</tbody>';

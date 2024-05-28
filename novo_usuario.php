@@ -50,6 +50,15 @@ include_once(realpath("layout/layout_header.php"));
                     <label for="password" class="form-label">Senha</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'):?>
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Tipo de usuário</label>
+                        <select class="form-control" id="role" name="role" required>
+                            <option value="client" selected>Cliente</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                <?php endif; ?>
                 <div class="mb-3">
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
                 </div>

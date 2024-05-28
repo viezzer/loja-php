@@ -14,8 +14,8 @@ class PostgresUserDao extends PostgresDao implements UserDao {
             return false;
         }
         $query = "INSERT INTO " . $this->table_name . 
-        " (login, password, name) VALUES" .
-        " (:login, :password, :name)";
+        " (login, password, name, role) VALUES" .
+        " (:login, :password, :name, :role)";
 
         $stmt = $this->conn->prepare($query);
 
@@ -24,6 +24,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         $stmt->bindValue(":login", $user->getLogin());
         $stmt->bindValue(":password", $user->getPassword());
         $stmt->bindValue(":name", $user->getName());
+        $stmt->bindValue(":role", $user->getRole());
 
         if($stmt->execute()){
             return true;
@@ -81,7 +82,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         $user = null;
 
         $query = "SELECT
-                    id, login, name, password
+                    id, login, name, password, role
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -95,7 +96,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
      
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $user = new User($row['id'],$row['login'], $row['password'], $row['name']);
+            $user = new User($row['id'],$row['login'], $row['password'], $row['name'], $row['role']);
         } 
      
         return $user;
@@ -166,7 +167,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
     public function getAllBySearchedInputs($search_id, $search_name) {
         $users = array();
 
-        $query = "SELECT id, login, password, name	
+        $query = "SELECT id, login, password, name, role	
                     FROM ".$this->table_name." 
                     WHERE true";
         // verifica se input do id foi preenchido
@@ -189,7 +190,8 @@ class PostgresUserDao extends PostgresDao implements UserDao {
                 $row['id'],
                 $row['login'],
                 $row['password'],
-                $row['name']
+                $row['name'],
+                $row['role']
             );
     
             $users[] = $user;
