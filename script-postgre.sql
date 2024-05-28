@@ -1,4 +1,20 @@
-﻿CREATE TABLE users (
+﻿-- Desabilitar verificação de chaves estrangeiras temporariamente
+SET session_replication_role = 'replica';
+
+-- Dropar tabelas na ordem correta para evitar erros de dependência
+DROP TABLE IF EXISTS order_items;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS clients;
+DROP TABLE IF EXISTS stocks;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS suppliers;
+DROP TABLE IF EXISTS addresses;
+DROP TABLE IF EXISTS users;
+
+-- Habilitar verificação de chaves estrangeiras novamente
+SET session_replication_role = 'origin';
+
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     login VARCHAR(30) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -6,7 +22,7 @@
     role VARCHAR(10) NOT NULL CHECK (role IN ('admin', 'client'))
 );
 
-INSERT INTO users(login, password, name) VALUES ('admin','21232f297a57a5a743894a0e4a801fc3','Admin');
+INSERT INTO users(login, password, name, role) VALUES ('admin','21232f297a57a5a743894a0e4a801fc3','Admin', 'admin');
 
 CREATE TABLE addresses (
     id SERIAL PRIMARY KEY,
