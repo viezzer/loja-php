@@ -38,8 +38,10 @@ if($user) {
         $_SESSION['loggedin'] = true;
         $_SESSION["user_id"]= $user->getId(); 
         $_SESSION["user_name"] = stripslashes($user->getName()); 
-        $_SESSION['user_role'] = $user['role'];
+        $_SESSION['user_role'] = $user->getRole();
         //$_SESSION["permissao"]= $dados["postar"]; 
+        // var_dump($_SESSION);
+        // exit; 
         header("Location: index.php"); 
         exit; 
     } else {

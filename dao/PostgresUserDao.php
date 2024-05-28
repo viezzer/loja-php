@@ -106,7 +106,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         $user = null;
 
         $query = "SELECT
-                    id, login, name, password
+                    id, login, name, password, role
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -120,7 +120,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
      
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $user = new User($row['id'],$row['login'], $row['password'], $row['name']);
+            $user = new User($row['id'],$row['login'], $row['password'], $row['name'], $row['role']);
         } 
      
         return $user;
