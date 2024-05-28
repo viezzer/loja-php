@@ -35,8 +35,10 @@ if($user) {
     if(!strcmp($password, $user->getPassword()))
     { 
         // TUDO OK! Agora, passa os dados para a sessão e redireciona o usuário 
+        $_SESSION['loggedin'] = true;
         $_SESSION["user_id"]= $user->getId(); 
         $_SESSION["user_name"] = stripslashes($user->getName()); 
+        $_SESSION['user_role'] = $user['role'];
         //$_SESSION["permissao"]= $dados["postar"]; 
         header("Location: index.php"); 
         exit; 
