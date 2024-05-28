@@ -147,7 +147,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         $users = array();
 
         $query = "SELECT
-                    id, login, password, name
+                    id, login, password, name, role
                 FROM
                     " . $this->table_name . 
                     " ORDER BY id ASC";
@@ -157,7 +157,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
-            $users[] = new User($id,$login,$password,$name);
+            $users[] = new User($id,$login,$password,$name,$role);
         }
         
         return $users;

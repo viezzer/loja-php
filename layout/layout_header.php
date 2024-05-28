@@ -30,15 +30,15 @@
 			
 			if(isset($_SESSION["user_role"]) && $_SESSION["user_role"] == 'admin') {
 				// Informações de login
-				echo '<li class="nav-item"><a class="nav-link" href="usuarios.php">Usuários</a></li>';
-				echo '<li class="nav-item"><a class="nav-link" href="fornecedores.php">Fornecedores</a></li>';
-				echo '<li class="nav-item"><a class="nav-link" href="produtos.php">Produtos</a></li>';
 				echo "<li class='nav-item dropdown '>
 						<a class='nav-link dropdown-toggle' href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false'>
-							{$_SESSION['user_name']}
+						{$_SESSION['user_name']}
 						</a>
 						<ul class='dropdown-menu'>
-							<li><a class='dropdown-item' href='executa_logout.php'>Logout</a></li>
+						<li><a class='dropdown-item' href='usuarios.php'>Usuários</a></li>
+						<li><a class='dropdown-item' href='fornecedores.php'>Fornecedores</a></li>
+						<li><a class='dropdown-item' href='produtos.php'>Produtos</a></li>
+						<li><a class='dropdown-item' href='executa_logout.php'>Logout</a></li>
 						</ul>
 					</li>";
 			} else {
