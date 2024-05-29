@@ -15,5 +15,5 @@ if(!isset($_SESSION["loggedin"]))
     // Usuário não logado! Redireciona para a página de login 
     header("Location: login.php"); 
     exit; 
-} 
+}
 ?>

@@ -4,7 +4,6 @@ SET session_replication_role = 'replica';
 -- Dropar tabelas na ordem correta para evitar erros de dependência
 DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS clients;
 DROP TABLE IF EXISTS stocks;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS suppliers;
@@ -19,10 +18,18 @@ CREATE TABLE users (
     login VARCHAR(30) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
+    phone VARCHAR(255),
+    cartao_credito VARCHAR(255),
     role VARCHAR(10) NOT NULL CHECK (role IN ('admin', 'client'))
 );
 
-INSERT INTO users(login, password, name, role) VALUES ('admin','21232f297a57a5a743894a0e4a801fc3','Admin', 'admin');
+INSERT INTO users(login, password, name, role) 
+VALUES 
+    ('admin','21232f297a57a5a743894a0e4a801fc3','Admin', 'admin'),
+    ('client','21232f297a57a5a743894a0e4a801fc3','cliente1', 'client'),
+    ('client2','21232f297a57a5a743894a0e4a801fc3','cliente2', 'client'),
+    ('client3','21232f297a57a5a743894a0e4a801fc3','cliente3', 'client'),
+    ('client4','21232f297a57a5a743894a0e4a801fc3','cliente4', 'client');
 
 CREATE TABLE addresses (
     id SERIAL PRIMARY KEY,
@@ -94,25 +101,6 @@ VALUES
     (20, 39.99, 4),
     (200, 9.99, 5);
 
-CREATE TABLE clients (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    phone VARCHAR(255),
-    email VARCHAR(30) NOT NULL UNIQUE,
-    credit_card VARCHAR(30),
-    address_id INTEGER NOT NULL,
-    CONSTRAINT fk_address_client FOREIGN KEY (address_id) REFERENCES addresses(id)
-);
-
-INSERT INTO clients (name, phone, email, credit_card, address_id)
-VALUES 
-    ('João Silva', '(54) 99876-5432', 'joao.silva@exemplo.com', '1234-5678-9012-3456', 1),
-    ('Maria Oliveira', '(54) 98765-4321', 'maria.oliveira@exemplo.com', '2345-6789-0123-4567', 2),
-    ('Carlos Souza', '(54) 97654-3210', 'carlos.souza@exemplo.com', '3456-7890-1234-5678', 3),
-    ('Ana Lima', '(54) 96543-2109', 'ana.lima@exemplo.com', '4567-8901-2345-6789', 4),
-    ('Paula Santos', '(54) 95432-1098', 'paula.santos@exemplo.com', '5678-9012-3456-7890', 5);
-
-
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     number INTEGER NOT NULL,
@@ -120,7 +108,7 @@ CREATE TABLE orders (
     delivery_date DATE,
     status VARCHAR(20) NOT NULL CHECK (status IN ('NOVO', 'ENTREGUE', 'CANCELADO')),
     client_id INTEGER NOT NULL,
-    CONSTRAINT fk_client_order FOREIGN KEY (client_id) REFERENCES clients(id)
+    CONSTRAINT fk_client_order FOREIGN KEY (client_id) REFERENCES users(id)
 );
 
 INSERT INTO orders (number, order_date, delivery_date, status, client_id)
