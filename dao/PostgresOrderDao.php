@@ -208,7 +208,10 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
             $orders[] = $order->toJSON();
         }
         
-        return stripslashes(json_encode($orders));
+        if(sizeof($orders)>0) {
+            return json_encode($orders);
+        }
+        return null;
     }
 }
 ?>
