@@ -43,5 +43,10 @@ class Order {
     public function setStatus($status) {$this->status = $status;}
 
     public function setClientId($clientId) {$this->clientId = $clientId;}
+
+    public function toJSON() {
+        $data = ['id' => $this->id, 'number' => $this->number, 'orderDate' => $this->orderDate, 'deliveryDate' => $this->deliveryDate, 'status' => $this->status, 'clientId' => $this->clientId];
+        return $data;
+    }
 }
 ?>

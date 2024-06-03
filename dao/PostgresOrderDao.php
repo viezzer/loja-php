@@ -175,5 +175,40 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
         
         return $orders;
     }
+
+    public function getAllBySearchedInputsJSON($search_client_id, $search_number) {
+        $orders = array();
+
+        $query = "SELECT id, number, order_date, delivery_date, status, client_id	
+                    FROM ".$this->table_name." 
+                    WHERE true";
+        // verifica se input do id foi preenchido
+        if(!empty($search_client_id)) {
+            $query.= " AND id = $search_client_id";
+        }
+        // verifica se input do número foi preenchido
+        if(!empty($search_number)) {
+            $query.= " AND number LIKE '%$search_number%'";
+        }
+        // ordena por id crescente
+        $query.= " ORDER BY id ASC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $order = new Order(
+                $row['id'],
+                $row['number'],
+                $row['order_date'],
+                $row['delivery_date'],
+                $row['status'],
+                $row['client_id']
+            );
+    
+            $orders[] = $order->toJSON();
+        }
+        
+        return stripslashes(json_encode($orders));
+    }
 }
 ?>

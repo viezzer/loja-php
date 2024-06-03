@@ -10,20 +10,17 @@ $request_method = $_SERVER["REQUEST_METHOD"];
 switch ($request_method) {
     case 'GET':
         // Busca todos os pedidos ou um pedido específico pelo ID
-        if (!empty($_GET["id"])) {
-            $id = intval($_GET["id"]);
-            $order = $dao->getById($id);
-            if ($order != null) {
-                echo json_encode($order);
-                http_response_code(200); // 200 OK
-            } else {
-                http_response_code(404); // 404 Not Found
-            }
-        } else {
-            $orders = $dao->getAll();
+        $number = intval(@$_GET["searched_number"]);
+        $client_id = @$_GET['searched_client_id'];
+        $orders = $dao->getAllBySearchedInputsJSON($client_id, $number);
+        if ($orders != null) {
+            // var_dump($orders);
             echo json_encode($orders);
             http_response_code(200); // 200 OK
+        } else {
+            http_response_code(404); // 404 Not Found
         }
+        
         break;
         
     case 'POST':
