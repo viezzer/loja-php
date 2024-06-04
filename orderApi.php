@@ -35,15 +35,12 @@ switch ($request_method) {
                 // Se a validação for bem-sucedida, insere o pedido
                 $dao->insert($order);
                 http_response_code(201); // 201 Created
-            } else {
-                http_response_code(400); // 400 Bad Request
-                echo json_encode(array("message" => "Dados fornecidos são inválidos."));
-            }
-
+            } 
         } catch (Exception $e)  {
             // Se a validação falhar, retorna um erro
             http_response_code(400); // 400 Bad Request
-            echo json_encode(array("message" => $e->getMessage()));
+            echo json_encode(array("message" => "Dados fornecidos são inválidos."));
+            // echo json_encode(array("message" => $e->getMessage()));
         }
         break;
         
