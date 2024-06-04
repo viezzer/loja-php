@@ -10,9 +10,9 @@ $request_method = $_SERVER["REQUEST_METHOD"];
 switch ($request_method) {
     case 'GET':
         // Busca todos os pedidos ou um pedido específico pelo ID
-        $number = intval(@$_GET["searched_number"]);
-        $client_id = @$_GET['searched_client_id'];
-        $orders = $dao->getAllBySearchedInputsJSON($client_id, $number);
+        $order_number = intval(@$_GET["order_number"]);
+        $client_name = @$_GET['client_name'];
+        $orders = $dao->getAllBySearchedInputsJSON($client_name, $order_number);
         if ($orders != null) {
             // var_dump($orders);
             echo json_encode($orders);
