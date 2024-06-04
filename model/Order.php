@@ -48,5 +48,17 @@ class Order {
         $data = ['id' => $this->id, 'number' => $this->number, 'orderDate' => $this->orderDate, 'deliveryDate' => $this->deliveryDate, 'status' => $this->status, 'clientId' => $this->clientId];
         return $data;
     }
+
+    public function validate() {
+        // Verifica se os campos não estão vazios
+        if (empty($this->number) || empty($this->orderDate) || 
+            empty($this->deliveryDate) || empty($this->status) || 
+            empty($this->clientId)) {
+            return false; // Dados inválidos
+        }
+
+        // Se todas as validações passarem
+        return true; // Dados válidos
+    }
 }
 ?>
