@@ -185,7 +185,7 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
             WHERE true";
         // verifica se input do id foi preenchido
         if(!empty($client_name)) {
-            $query.= " AND u.name LIKE '%$client_name%'";
+            $query.= " AND UPPER(u.name) LIKE UPPER('%$client_name%')";
         } 
         // verifica se input do número foi preenchido
         if(!empty($order_number)) {
