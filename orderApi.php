@@ -26,10 +26,22 @@ switch ($request_method) {
     case 'POST':
         try {
             // Insere um novo pedido
+            // obtem json
             $data = json_decode(file_get_contents('php://input'), true);
-            $order = new Order(null, $data["number"], $data["order_date"], 
-                            $data["delivery_date"], $data["status"], $data["client_id"]);
-
+            // valida se foi recebido id do cliente
+            if(!isset($data["client_id"])) {
+                http_response_code(400); // 400 Bad Request
+                echo json_encode(array("message" => "Nenhum id de cliente fornecido."));
+            }
+            // define variáveis para criar pedido
+            $order_date = date('Y-m-d'); // Data atual no formato 'yyyy-mm-dd'
+            $delivery_date = date('Y-m-d', strtotime($order_date. ' + 5 days')); // Data de entrega 5 dias à frente
+            $status = 'NOVO';
+            //cria objeto do pedido
+            $order = new Order(null, null, $order_date, 
+                            $delivery_date, $status, $data["client_id"]);
+            var_dump($order);
+            exit;
             // Chama o método validate() para verificar a validade dos dados
             if ($order->validate()) {
                 // Se a validação for bem-sucedida, insere o pedido

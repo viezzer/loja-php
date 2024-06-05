@@ -103,7 +103,7 @@ VALUES
 
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
-    number INTEGER NOT NULL,
+    number SERIAL NOT NULL,
     order_date DATE NOT NULL,
     delivery_date DATE,
     status VARCHAR(20) NOT NULL CHECK (status IN ('NOVO', 'ENTREGUE', 'CANCELADO')),
