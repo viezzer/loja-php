@@ -8,25 +8,24 @@ $dao = $factory->getOrderDao();
 $request_method = $_SERVER["REQUEST_METHOD"];
 	
 switch ($request_method) {
-    // Busca todos os pedidos ou um pedido específico
+    // Busca todos os pedidos ou um pedido específico pelo seu número
     case 'GET':
         $order_number = intval(@$_GET["order_number"]);
         $client_name = @$_GET['client_name'];
-        // var_dump($order_number, $client_name);
+        // se existe order_number, procura o pedido com o número informado
         if(isset($order_number) && $order_number>0) {
             $order = $dao->getOrderByNumber($order_number);
-            echo $order;
+            echo json_encode($order);
             http_response_code(200); // 200 OK
             exit;
         } else {
+            // busca todos pedidos com base nos fitros
             $orders = $dao->getAllBySearchedInputs($client_name, $order_number);
-            // var_dump($orders);
-            // exit();
             if ($orders != null) {
                 // var_dump($orders);
                 echo json_encode($orders);
                 http_response_code(200); // 200 OK
-                exit();
+                exit;
             } else {
                 http_response_code(404); // 404 Not Found
             }
