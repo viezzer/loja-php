@@ -48,8 +48,10 @@ switch ($request_method) {
 
             //cria objeto do pedido
             $order = new Order(null, null, $order_date, $delivery_date, $status, null, null);
+            // cria objeto cliente
             $client = new User($data["client_id"],null,null,null,null);
-            $order->setCLient($client);
+            //insere cliente e itens no objeto pedido
+            $order->setClient($client);
             $order->setItems($data['items']);
             // var_dump($order);
             // exit;
