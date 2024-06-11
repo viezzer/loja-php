@@ -13,9 +13,9 @@ class Order {
     public function __construct($id, $number, $orderDate, $deliveryDate, $status, $client, $items) {
         $this->id = $id;
         $this->number = $number;
-        $this->orderDate = $orderDate;
-        $this->deliveryDate = $deliveryDate;
-        $this->status = $status;
+        $orderDate != null ? $this->orderDate = $orderDate : $this->orderDate = date('Y-m-d');
+        $orderDate != null ? $this->deliveryDate = $deliveryDate : $this->deliveryDate = date('Y-m-d', strtotime($orderDate. ' + 5 days'));
+        $status!=null ? $this->status = $status : $this->status = 'NOVO';
         $this->client = $client;
         $this->items = $items;
     }
@@ -67,7 +67,8 @@ class Order {
 
     public function validate() {
         // Verifica se os campos não estão vazios
-        if (empty($this->orderDate) || 
+        if (empty($this->items) ||
+            empty($this->orderDate) || 
             empty($this->deliveryDate) || 
             empty($this->status) || 
             empty($this->client)) {
