@@ -6,16 +6,18 @@ class Order {
     private $orderDate;
     private $deliveryDate;
     private $status;
-    private $clientId;
+    private $client;
+    private $items;
 
     // Construtor
-    public function __construct($id, $number, $orderDate, $deliveryDate, $status, $clientId) {
+    public function __construct($id, $number, $orderDate, $deliveryDate, $status, $client, $items) {
         $this->id = $id;
         $this->number = $number;
         $this->orderDate = $orderDate;
         $this->deliveryDate = $deliveryDate;
         $this->status = $status;
-        $this->clientId = $clientId;
+        $this->client = $client;
+        $this->items = $items;
     }
 
     // Getters
@@ -29,8 +31,9 @@ class Order {
 
     public function getStatus() {return $this->status;}
 
-    public function getClientId() {return $this->clientId;}
-
+    public function getClient() {return $this->client;}
+    
+    public function getItems() {return $this->items;}
     // Setters
     public function setId($id) {$this->id = $id;}
 
@@ -42,18 +45,32 @@ class Order {
 
     public function setStatus($status) {$this->status = $status;}
 
-    public function setClientId($clientId) {$this->clientId = $clientId;}
+    public function setClient($client) {$this->client = $client;}
+    
+    public function setItems($items) {$this->items = $items;}
+
+    public function setItem($item) {$this->items[] = $item;}
 
     public function toJSON() {
-        $data = ['id' => $this->id, 'number' => $this->number, 'orderDate' => $this->orderDate, 'deliveryDate' => $this->deliveryDate, 'status' => $this->status, 'clientId' => $this->clientId];
+        $data = [
+            'id' => $this->id,
+            'number' => $this->number,
+            'orderDate' => $this->orderDate,
+            'deliveryDate' => $this->deliveryDate,
+            'status' => $this->status,
+            'client_name' => $this->client->getName(),
+            'items' => $this->items
+
+        ];
         return $data;
     }
 
     public function validate() {
         // Verifica se os campos não estão vazios
-        if (empty($this->number) || empty($this->orderDate) || 
-            empty($this->deliveryDate) || empty($this->status) || 
-            empty($this->clientId)) {
+        if (empty($this->orderDate) || 
+            empty($this->deliveryDate) || 
+            empty($this->status) || 
+            empty($this->client)) {
             return false; // Dados inválidos
         }
 

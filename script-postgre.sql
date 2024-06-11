@@ -103,7 +103,7 @@ VALUES
 
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
-    number SERIAL NOT NULL,
+    number SERIAL,
     order_date DATE NOT NULL,
     delivery_date DATE,
     status VARCHAR(20) NOT NULL CHECK (status IN ('NOVO', 'ENTREGUE', 'CANCELADO')),
@@ -111,13 +111,13 @@ CREATE TABLE orders (
     CONSTRAINT fk_client_order FOREIGN KEY (client_id) REFERENCES users(id)
 );
 
-INSERT INTO orders (number, order_date, delivery_date, status, client_id)
+INSERT INTO orders (order_date, delivery_date, status, client_id)
 VALUES 
-    (1001, '2024-05-01', '2024-05-05', 'NOVO', 1),
-    (1002, '2024-05-02', '2024-05-06', 'NOVO', 2),
-    (1003, '2024-05-03', '2024-05-07', 'ENTREGUE', 3),
-    (1004, '2024-05-04', '2024-05-08', 'CANCELADO', 4),
-    (1005, '2024-05-05', '2024-05-09', 'NOVO', 5);
+    ('2024-05-01', '2024-05-05', 'NOVO', 1),
+    ('2024-05-02', '2024-05-06', 'NOVO', 2),
+    ('2024-05-03', '2024-05-07', 'ENTREGUE', 3),
+    ('2024-05-04', '2024-05-08', 'CANCELADO', 4),
+    ('2024-05-05', '2024-05-09', 'NOVO', 5);
 
 
 CREATE TABLE order_items (
