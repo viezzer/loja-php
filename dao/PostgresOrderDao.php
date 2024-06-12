@@ -10,27 +10,102 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
     
     public function insert($order) {
         // validar estoque de cada item do pedido
+        $items = $order->getItems();
+        $result = $this->verificarSaldoEstoque($items);
         // se não existe estoque envia mensagem de qual item não possui estoque
-        // se existe estoque insere pedido
+        if ($result!==true) {
+            http_response_code(400);
+            echo $result;
+            exit;
+        } 
+        try {
+                
+            // se existe estoque insere pedido
+            $this->conn->beginTransaction();
 
-        $query = "INSERT INTO " . $this->table_name . 
-        " (order_date, delivery_date, status, client_id) VALUES" .
-        " (:order_date, :delivery_date, :status, :client_id)";
+            $query = "INSERT INTO " . $this->table_name . 
+            " (order_date, delivery_date, status, client_id) VALUES" .
+            " (:order_date, :delivery_date, :status, :client_id) RETURNING id";
+            
+            $stmt = $this->conn->prepare($query);
+            
+            // bind values
+            $stmt->bindValue(":order_date", $order->getOrderDate());
+            $stmt->bindValue(":delivery_date", $order->getDeliveryDate());
+            $stmt->bindValue(":status", $order->getStatus());
+            $stmt->bindValue(":client_id", $order->getClient()->getId());
+            $stmt->execute();
 
-        $stmt = $this->conn->prepare($query);
+            // Obter o ID do pedido inserido
+            $orderId = $stmt->fetchColumn();
 
-        // bind values
-        $stmt->bindValue(":order_date", $order->getOrderDate());
-        $stmt->bindValue(":delivery_date", $order->getDeliveryDate());
-        $stmt->bindValue(":status", $order->getStatus());
-        $stmt->bindValue(":client_id", $order->getClientId());
+            // Inserir itens do pedido
+            $queryItem = "INSERT INTO order_items (quantity, price, order_id, product_id) 
+                        VALUES (:quantity, :price, :order_id, :product_id)";
+            $stmtItem = $this->conn->prepare($queryItem);
 
-        if($stmt->execute()){
+            foreach ($items as $item) {
+                $stmtItem->bindValue(":quantity", $item['quantity']);
+                $stmtItem->bindValue(":price", $item['price']);
+                $stmtItem->bindValue(":order_id", $orderId);
+                $stmtItem->bindValue(":product_id", $item['product_id']);
+                $stmtItem->execute();
+            }
+
+            // Confirmar a transação
+            $this->conn->commit();
+
+            http_response_code(201);
+            echo json_encode(array("message"=>"Pedido e itens inseridos com sucesso!"));
+            exit;
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+            http_response_code(400);
+            return "Erro ao inserir pedido e itens: " . $e->getMessage();
+        }
+    }
+
+    public function verificarSaldoEstoque($items) {
+        try {
+            // Iterar sobre os itens
+            foreach ($items as $item) {
+                $product_id = $item['product_id'];
+                $quantidade_desejada = $item['quantity'];
+                // Consulta para obter o saldo do produto no estoque
+                $stmt = $this->conn->prepare("
+                    SELECT s.quantity, p.name 
+                    FROM stocks s
+                    JOIN products p ON s.product_id = p.id
+                    WHERE s.product_id = :product_id"
+                );
+                $stmt->bindValue(':product_id', $product_id, PDO::PARAM_INT);
+                $stmt->execute();
+
+                // Verificar se o produto foi encontrado no estoque
+                if ($stmt->rowCount() > 0) {
+                    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $quantidade_estoque = $result['quantity'];
+                    $product_name = $result['name'];
+                    // Verificar se há saldo suficiente
+                    if ($quantidade_estoque < $quantidade_desejada) {
+                        // Não há saldo suficiente, retorna mensagem personalizada
+                        return "O produto '$product_name' não tem saldo suficiente no estoque.";
+                    }
+                } else {
+                    // Produto não encontrado no estoque
+                    return "O produto com ID $product_id não foi encontrado no estoque.";
+                }
+            }
+
+            // Se todos os itens tiverem saldo suficiente
             return true;
-        }else{
+        } catch (PDOException $e) {
+            // Em caso de erro, exibir mensagem
+            echo 'Erro: ' . $e->getMessage();
             return false;
         }
     }
+
 
     public function removeById($id) {
         $query = "DELETE FROM " . $this->table_name . 

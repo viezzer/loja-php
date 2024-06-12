@@ -38,16 +38,19 @@ switch ($request_method) {
         try {
             // obtem json
             $data = json_decode(file_get_contents('php://input'), true);
-
-            // valida se foi recebido id do cliente
-            if(!isset($data["client_id"]) || !isset($data['items'])) {
+            // valida se foi recebido id do cliente e os itens do pedido
+            if(!isset($data["client_id"])) {
                 http_response_code(400); // 400 Bad Request
-                echo json_encode(array("message" => "Nenhum id de cliente ou item fornecido."));
+                echo json_encode(array("message" => "Nenhum id de cliente fornecido."));
                 exit;
+            }
+            if(!isset($data['items'])) {
+                http_response_code(400);
+                echo json_encode(array("message" => "Nenhum item fornecido."));
             }
 
             //cria objeto do pedido
-            $order = new Order(null, null, $order_date, $delivery_date, $status, null, null);
+            $order = new Order(null, null, null, null, null, null, null);
             // cria objeto cliente
             $client = new User($data["client_id"],null,null,null,null);
             //insere cliente e itens no objeto pedido
@@ -55,15 +58,20 @@ switch ($request_method) {
             $order->setItems($data['items']);
             // var_dump($order);
             // exit;
-            // Chama o método validate() para verificar a validade dos dados
+            // Chama o método validate() para validar os dados
             if (!$order->validate()) {
                 http_response_code(400); // 400 Bad Request
                 echo json_encode(array("message" => "Dados inválidos."));
                 exit;
             } 
             // Se a validação for bem-sucedida, insere o pedido
-            $dao->insert($order);
-            http_response_code(201); // 201 Created
+            try {
+                $dao->insert($order);
+                http_response_code(201); // 201 Created
+                
+            } catch( Exception $e) {
+                echo $e->getMessage();
+            }
         } catch (Exception $e)  {
             // Se a validação falhar, retorna um erro
             http_response_code(400); // 400 Bad Request
