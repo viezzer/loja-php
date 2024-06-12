@@ -22,6 +22,8 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
                 
             // se existe estoque insere pedido
             $this->conn->beginTransaction();
+            // remove saldo do estoque
+            $this->removeSaldoEstoque($items);
 
             $query = "INSERT INTO " . $this->table_name . 
             " (order_date, delivery_date, status, client_id) VALUES" .
@@ -62,6 +64,24 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
             $this->conn->rollBack();
             http_response_code(400);
             return "Erro ao inserir pedido e itens: " . $e->getMessage();
+        }
+    }
+
+    public function removeSaldoEstoque($items) {
+        try {
+            foreach ($items as $item) {
+                $query = "UPDATE stocks SET quantity = quantity - :quantity WHERE product_id = :product_id";
+                $stmt = $this->conn->prepare($query);
+                $stmt->bindValue(':quantity', $item['quantity'], PDO::PARAM_INT);
+                $stmt->bindValue(':product_id', $item['product_id'], PDO::PARAM_INT);
+                $stmt->execute();
+
+                if ($stmt->rowCount() == 0) {
+                    throw new Exception("Erro ao atualizar o saldo do produto ID " . $item['product_id']);
+                }
+            }
+        } catch (Exception $e) {
+            throw new Exception("Erro ao remover saldo do estoque: " . $e->getMessage());
         }
     }
 
