@@ -61,7 +61,7 @@ $stock = $product->getStock();
                     }
                 }
                 echo '
-                <form action="atualiza_produto.php" method="post">
+                <form action="atualiza_produto.php" method="post" enctype="multipart/form-data">
                     <legend>Cadastro de Produto</legend>
                     <input type="hidden" value="'.$product->getId().'" name="id">
                     <div class="row g-3 mb-3">
@@ -89,8 +89,20 @@ $stock = $product->getStock();
                         <div class="col-lg-6">
                             <label for="inputPrice" class="form-label">Preço</label>
                             <input type="text" class="form-control" id="inputPrice" name="price" value="'.$stock->getPrice().'" '.$edit.'>
-                        </div>
-                    </div>';
+                        </div>';
+                    if($edit!='disabled') {
+                        echo '<div class="col-lg-6">
+                                <label for="inputImage" class="form-label">Imagem</label>
+                                <input type="file" class="form-control" id="inputImage" name="image" accept="image/*" '.$edit.'>
+                            </div>';
+                    }
+                    if($product->getImage()){
+                        echo '<div class="col-lg-7">
+                            <label class="form-label">Imagem do Produto</label><br>
+                            <img height="150px" src="data:image/png;base64,' . $product->getImage() . '" class="rounded float-left" alt="Imagem do produto">
+                        </div>';
+                    }
+                    echo '</div>';
                     if($edit!='disabled') {
                         echo '<button type="submit" class="btn btn-success">Salvar</button>';
                     }

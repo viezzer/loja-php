@@ -6,7 +6,7 @@ class Product {
     private $description;
     private $supplier;
     private $stock;
-    // private $image;
+    private $image;
 
     public function __construct($id, $name, $description, $supplier, $stock)
     {
@@ -15,7 +15,7 @@ class Product {
         $this->description = $description;
         $this->supplier = $supplier;
         $this->stock = $stock;
-        // $this->image = $image;
+        $this->image = '';
     }
 
     // Getters
@@ -24,7 +24,7 @@ class Product {
     public function getDescription() { return $this->description; }
     public function getSupplier() { return $this->supplier; }
     public function getStock() { return $this->stock; }
-    // public function getImage() { return $this->image; }
+    public function getImage() { return $this->image; }
 
     // Setters
     public function setId($id) { $this->id = $id; }
@@ -32,5 +32,5 @@ class Product {
     public function setDescription($description) { $this->description = $description; }
     public function setSupplier($supplier) { $this->supplier = $supplier; }
     public function setStock($stock) { $this->stock = $stock; }
-    // public function setImage($image) { $this->image = $image; }
+    public function setImage($image) { $this->image = $image; }
 }
