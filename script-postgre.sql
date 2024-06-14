@@ -2,13 +2,13 @@
 SET session_replication_role = 'replica';
 
 -- Dropar tabelas na ordem correta para evitar erros de dependência
-DROP TABLE IF EXISTS order_items;
-DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS stocks;
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS suppliers;
-DROP TABLE IF EXISTS addresses;
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS order_items cascade;
+DROP TABLE IF EXISTS orders cascade;
+DROP TABLE IF EXISTS stocks cascade;
+DROP TABLE IF EXISTS products cascade;
+DROP TABLE IF EXISTS suppliers cascade;
+DROP TABLE IF EXISTS addresses cascade;
+DROP TABLE IF EXISTS users cascade;
 
 -- Habilitar verificação de chaves estrangeiras novamente
 SET session_replication_role = 'origin';
