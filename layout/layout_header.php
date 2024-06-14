@@ -41,7 +41,7 @@
 						<li><a class='dropdown-item' href='executa_logout.php'>Logout</a></li>
 						</ul>
 					</li>";
-			} else if ($_SESSION["user_role"] && $_SESSION["user_role"] == 'client') {
+			} else if (isset($_SESSION["user_role"]) && $_SESSION["user_role"] && $_SESSION["user_role"] == 'client') {
 				
 			} else {
 				echo '<li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>';
