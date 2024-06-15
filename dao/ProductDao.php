@@ -8,5 +8,6 @@ interface ProductDao {
     public function getById($id);
     public function getByName($login);
     public function getAll($search_id, $search_name, $limit, $offset);
+    public function countAll($search_id, $search_name);
 }
 ?>
