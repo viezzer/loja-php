@@ -156,6 +156,27 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         return $supplier;
     }
 
+    public function getSuppliersOptionList() {
+
+            $suppliers = array();
+    
+            $query = "SELECT
+                        id, name
+                    FROM
+                        " . $this->table_name . 
+                        " ORDER BY name ASC";
+         
+            $stmt = $this->conn->prepare( $query );
+            $stmt->execute();
+    
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+                $suppliers[] = new Supplier($id, $name, null, null, null, null);
+            }
+            
+            return $suppliers;
+            }
+
     public function getAll($search_id, $search_name, $limit, $offset) {
         $suppliers = array();
 

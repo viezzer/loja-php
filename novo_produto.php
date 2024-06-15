@@ -6,7 +6,7 @@ include_once "fachada.php";
 
 // Recupera todos os fornecedores para o campo de seleção
 $dao = $factory->getSupplierDao();
-$suppliers = $dao->getAll();
+$suppliers = $dao->getSuppliersOptionList();
 ?>
 
 <div class="container py-4">

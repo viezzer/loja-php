@@ -127,22 +127,6 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         return $user;
     }
 
-    /*
-    public function getAll() {
-
-        $query = "SELECT
-                    id, login, senha, nome
-                FROM
-                    " . $this->table_name . 
-                    " ORDER BY id ASC";
-     
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
-     
-        return $stmt;
-    }
-    */
-
     public function getAll($search_id, $search_name, $limit, $offset) {
 
         $users = array();

@@ -13,7 +13,7 @@ if(isset($_GET['edit'])) {
 }
 // procura fornecedores
 $supplierDao = $factory->getSupplierDao();
-$suppliers = $supplierDao->getAll();
+$suppliers = $supplierDao->getSuppliersOptionList();
 
 $productDao = $factory->getProductDao();
 $product = $productDao->getById($_GET['id']);
