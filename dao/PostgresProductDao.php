@@ -217,7 +217,7 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
         }
         // verifica se input do nome foi preenchido
         if(!empty($search_name)) {
-            $query.= " AND upper(name) LIKE upper('%$search_name%')";
+            $query.= " AND upper(p.name) LIKE upper('%$search_name%')";
         }
         //ordena por id crescente
         $query.= " ORDER BY p.id ASC";     
