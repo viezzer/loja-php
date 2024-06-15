@@ -174,7 +174,7 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         }
         // verifica se input do nome foi preenchido
         if(!empty($search_name)) {
-            $query.= " AND name LIKE '%$search_name%'";
+            $query.= " AND upper(name) LIKE upper('%$search_name%')";
         }
         //ordena por id crescente
         $query.= " ORDER BY id ASC";     
@@ -220,7 +220,7 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         }
         // verifica se input do nome foi preenchido
         if(!empty($search_name)) {
-            $query.= " AND name LIKE '%$search_name%'";
+            $query.= " AND upper(name) LIKE upper('%$search_name%')";
         }
         //ordena por id crescente
         $query.= " ORDER BY id ASC";     
@@ -250,7 +250,7 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         }
         // verifica se input do nome foi preenchido
         if(!empty($search_name)) {
-            $query.= " AND name LIKE '%$search_name%'";
+            $query.= " AND upper(name) LIKE upper('%$search_name%')";
         }
 
         $stmt = $this->conn->prepare($query);
