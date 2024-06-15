@@ -195,8 +195,7 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
         return $product;
     }
 
-    public function getAll() {
-
+    public function getAll($search_id, $search_name, $limit, $offset) {
         $products = array();
 
         $query = "SELECT
@@ -207,11 +206,26 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
                     s.quantity AS quantity,
                     s.price AS price,
                     sup.name AS supplier_name
-                FROM $this->table_name p 
-                LEFT JOIN stocks s ON p.id = s.product_id
-                JOIN suppliers sup ON p.supplier_id = sup.id;";
+                FROM $this->table_name p
+                JOIN stocks s ON p.id = s.product_id
+                JOIN suppliers sup ON p.supplier_id = sup.id 
+                WHERE true";
+
+        // verifica se input do id foi preenchido
+        if(!empty($search_id)) {
+            $query.= " AND p.id = $search_id";
+        }
+        // verifica se input do nome foi preenchido
+        if(!empty($search_name)) {
+            $query.= " AND p.name LIKE '%$search_name%'";
+        }
+        //ordena por id crescente
+        $query.= " ORDER BY p.id ASC";     
+        $query.= " LIMIT :limit OFFSET :offset;";
 
         $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -228,52 +242,21 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
         return $products;
     }
 
-    public function getAllBySearchedInputs($search_id, $search_name) {
-        $products = array();
-
-        $query = "SELECT
-                    p.id AS id,
-                    p.name AS name,
-                    p.description AS description,
-                    p.image,
-                    s.quantity AS quantity,
-                    s.price AS price,
-                    sup.name AS supplier_name
-                FROM
-                    $this->table_name p
-                JOIN
-                    stocks s ON p.id = s.product_id
-                JOIN
-                    suppliers sup ON p.supplier_id = sup.id 
-                WHERE true";
+    public function countAll($search_id, $search_name) {
+        $query = "SELECT COUNT(*) AS total FROM $this->table_name WHERE true ";
 
         // verifica se input do id foi preenchido
         if(!empty($search_id)) {
-            $query.= " AND p.id = $search_id";
+            $query.= " AND id = $search_id";
         }
         // verifica se input do nome foi preenchido
         if(!empty($search_name)) {
-            $query.= " AND p.name LIKE '%$search_name%'";
-            // print_r($query);
-            // exit;
+            $query.= " AND name LIKE '%$search_name%'";
         }
-        //ordena por id crescente
-        $query.= " ORDER BY p.id ASC";
+
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            extract($row);
-            $supplier = new Supplier(null,$supplier_name,null,null,null,null);
-            $stock = new Stock(null,$quantity,$price,$id);
-            $product = new Product($id, $name, $description,$supplier,$stock);
-            if ($image) {
-                $product->setImage(stream_get_contents($image));
-            }
-            $products[] = $product;
-        }
-
-        return $products;
+        return $stmt->fetch(PDO::FETCH_OBJ)->total;
     }
 
 }
