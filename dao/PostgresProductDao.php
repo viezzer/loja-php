@@ -259,5 +259,44 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
         return $stmt->fetch(PDO::FETCH_OBJ)->total;
     }
 
+    public function getAllHomePage($search_name, $limit, $offset) {
+        $products = array();
+
+        $query = "SELECT
+                    p.id AS id,
+                    p.name AS name,
+                    p.description AS description,
+                    p.image,
+                    s.quantity AS quantity,
+                    s.price AS price
+                FROM $this->table_name p
+                JOIN stocks s ON p.id = s.product_id
+                WHERE true";
+
+        // verifica se input do nome foi preenchido
+        if(!empty($search_name)) {
+            $query.= " AND upper(p.name||'|'||p.description) LIKE upper('%$search_name%')";
+        }
+        //ordena por id crescente
+        $query.= " ORDER BY p.name ASC";     
+        $query.= " LIMIT :limit OFFSET :offset;";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            extract($row);
+            $stock = new Stock(null,$quantity,$price,$id);
+            $product = new Product($id, $name, $description, null, $stock);
+            if ($image) {
+                $product->setImage(stream_get_contents($image));
+            }
+            $products[] = $product;
+        }
+
+        return $products;
+    }
 }
 ?>
