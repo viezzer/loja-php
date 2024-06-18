@@ -48,6 +48,7 @@
 						</a>
 						<ul class='dropdown-menu'>
 							<li><a class='dropdown-item' href='#'>Carrinho</a></li>
+							<li><a class='dropdown-item' href='#'>Meus Pedidos</a></li>
 							<li><a class='dropdown-item' href='executa_logout.php'>Logout</a></li>
 						</ul>
 					</li>";
