@@ -127,33 +127,33 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         return $user;
     }
 
-    /*
-    public function getAll() {
-
-        $query = "SELECT
-                    id, login, senha, nome
-                FROM
-                    " . $this->table_name . 
-                    " ORDER BY id ASC";
-     
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
-     
-        return $stmt;
-    }
-    */
-
-    public function getAll() {
+    public function getAll($search_id, $search_name, $limit, $offset) {
 
         $users = array();
 
-        $query = "SELECT
-                    id, login, password, name, role
-                FROM
-                    " . $this->table_name . 
-                    " ORDER BY id ASC";
-     
-        $stmt = $this->conn->prepare( $query );
+        $query = "SELECT id, 
+                    login, 
+                    password, 
+                    name, 
+                    role
+                FROM " . $this->table_name ."
+                where true";
+
+        // verifica se input do id foi preenchido
+        if(!empty($search_id)) {
+            $query.= " AND id = $search_id";
+        }
+        // verifica se input do nome foi preenchido
+        if(!empty($search_name)) {
+            $query.= " AND upper(name) LIKE upper('%$search_name%')";
+        }
+        //ordena por id crescente
+        $query.= " ORDER BY id ASC";     
+        $query.= " LIMIT :limit OFFSET :offset;";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -164,40 +164,21 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         return $users;
     }
 
-    public function getAllBySearchedInputs($search_id, $search_name) {
-        $users = array();
+    public function countAll($search_id, $search_name) {
+        $query = "SELECT COUNT(*) AS total FROM $this->table_name WHERE true ";
 
-        $query = "SELECT id, login, password, name, role	
-                    FROM ".$this->table_name." 
-                    WHERE true";
         // verifica se input do id foi preenchido
         if(!empty($search_id)) {
             $query.= " AND id = $search_id";
         }
         // verifica se input do nome foi preenchido
         if(!empty($search_name)) {
-            $query.= " AND name LIKE '%$search_name%'";
-            // print_r($query);
-            // exit;
+            $query.= " AND upper(name) LIKE upper('%$search_name%')";
         }
-        //ordena por id crescente
-        $query.= " ORDER BY id ASC";
-        $stmt = $this->conn->prepare( $query );
+
+        $stmt = $this->conn->prepare($query);
         $stmt->execute();
-        
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $user = new User(
-                $row['id'],
-                $row['login'],
-                $row['password'],
-                $row['name'],
-                $row['role']
-            );
-    
-            $users[] = $user;
-        }
-        
-        return $users;
+        return $stmt->fetch(PDO::FETCH_OBJ)->total;
     }
 }
 ?>

@@ -156,17 +156,54 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         return $supplier;
     }
 
-    public function getAll() {
+    public function getSuppliersOptionList() {
 
+            $suppliers = array();
+    
+            $query = "SELECT
+                        id, name
+                    FROM
+                        " . $this->table_name . 
+                        " ORDER BY name ASC";
+         
+            $stmt = $this->conn->prepare( $query );
+            $stmt->execute();
+    
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+                $suppliers[] = new Supplier($id, $name, null, null, null, null);
+            }
+            
+            return $suppliers;
+            }
+
+    public function getAll($search_id, $search_name, $limit, $offset) {
         $suppliers = array();
 
-        $query = "SELECT
-                    id, name, description, phone, email, address_id
-                FROM
-                    " . $this->table_name . 
-                    " ORDER BY id ASC";
-     
-        $stmt = $this->conn->prepare( $query );
+        $query = "SELECT id, 
+                    name,
+                    description, 
+                    phone, 
+                    email, 
+                    address_id
+                FROM " . $this->table_name ."
+                where true";
+
+        // verifica se input do id foi preenchido
+        if(!empty($search_id)) {
+            $query.= " AND id = $search_id";
+        }
+        // verifica se input do nome foi preenchido
+        if(!empty($search_name)) {
+            $query.= " AND upper(name) LIKE upper('%$search_name%')";
+        }
+        //ordena por id crescente
+        $query.= " ORDER BY id ASC";     
+        $query.= " LIMIT :limit OFFSET :offset;";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -177,93 +214,70 @@ class PostgresSupplierDao extends PostgresDao implements SupplierDao {
         return $suppliers;
     }
 
-    public function getAllWithAddress() {
+    public function getAllWithAddress($search_id, $search_name, $limit, $offset) {
 
         $suppliers = array();
 
-        $query = "SELECT s.id, s.name, s.description, s.phone, s.email, a.street, a.number, a.complement, a.neighborhood, a.zip_code, a.city,a.state	
-                    FROM ".$this->table_name." as s
-                    JOIN addresses as a ON a.id=s.address_id 
-                    ORDER BY s.id ASC";
-     
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
+        $query = "SELECT s.id, 
+                    s.name,
+                    s.description, 
+                    s.phone, 
+                    s.email, 
+                    s.address_id,
+                    a.street,
+                    a.number,
+                    a.complement,
+                    a.neighborhood,
+                    a.zip_code,
+                    a.city,
+                    a.state
+                FROM " . $this->table_name . " s
+                JOIN addresses a ON a.id=s.address_id
+                where true";
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $address = new Address(
-                null,
-                $row['street'],
-                $row['number'],
-                $row['complement'],
-                $row['neighborhood'],
-                $row['zip_code'],
-                $row['city'],
-                $row['state']
-            );
-            // var_dump($address);
-            // exit;
-            $supplier = new Supplier(
-                $row['id'],
-                $row['name'],
-                $row['description'],
-                $row['phone'],
-                $row['email'],
-                $address
-            );
-    
-            $suppliers[] = $supplier;
-        }
-        
-        return $suppliers;
-    }
-
-    public function getAllBySearchedInputs($search_id, $search_name) {
-        $suppliers = array();
-
-        $query = "SELECT s.id, s.name, s.description, s.phone, s.email, a.street, a.number, a.complement, a.neighborhood, a.zip_code, a.city,a.state	
-                    FROM ".$this->table_name." as s
-                    JOIN addresses as a ON a.id=s.address_id 
-                    WHERE true";
         // verifica se input do id foi preenchido
         if(!empty($search_id)) {
-            $query.= " AND s.id = $search_id";
+            $query.= " AND id = $search_id";
         }
         // verifica se input do nome foi preenchido
         if(!empty($search_name)) {
-            $query.= " AND s.name LIKE '%$search_name%'";
-            // print_r($query);
-            // exit;
+            $query.= " AND upper(s.name) LIKE upper('%$search_name%')";
         }
         //ordena por id crescente
-        $query.= " ORDER BY s.id ASC";
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
-        
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $address = new Address(
-                null,
-                $row['street'],
-                $row['number'],
-                $row['complement'],
-                $row['neighborhood'],
-                $row['zip_code'],
-                $row['city'],
-                $row['state']
-            );
+        $query.= " ORDER BY id ASC";     
+        $query.= " LIMIT :limit OFFSET :offset;";
 
-            $supplier = new Supplier(
-                $row['id'],
-                $row['name'],
-                $row['description'],
-                $row['phone'],
-                $row['email'],
-                $address
-            );
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $address = new Address(null, $row['street'], $row['number'], $row['complement'], $row['neighborhood'], $row['zip_code'], $row['city'], $row['state'] );
+            $supplier = new Supplier($row['id'], $row['name'], $row['description'], $row['phone'], $row['email'], $address );
     
             $suppliers[] = $supplier;
         }
         
         return $suppliers;
     }
+
+    public function countAll($search_id, $search_name) {
+        $query = "SELECT COUNT(*) AS total FROM $this->table_name WHERE true ";
+
+        // verifica se input do id foi preenchido
+        if(!empty($search_id)) {
+            $query.= " AND id = $search_id";
+        }
+        // verifica se input do nome foi preenchido
+        if(!empty($search_name)) {
+            $query.= " AND upper(name) LIKE upper('%$search_name%')";
+        }
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_OBJ)->total;
+    }
+
 }
 ?>

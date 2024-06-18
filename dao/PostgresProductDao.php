@@ -85,18 +85,34 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
         $this->conn->beginTransaction();
         //atualiza informações do produto
         try {
-            $query = "UPDATE " . $this->table_name .
-                " SET name = :name, description = :description, supplier_id = :supplier_id" .
-                " WHERE id = :id";
-    
-            $stmt = $this->conn->prepare($query);
-    
-            // bind parameters
-            $stmt->bindValue(":name", $product->getName());
-            $stmt->bindValue(":description", $product->getDescription());
-            $stmt->bindValue(":supplier_id", $supplier->getId());
-            $stmt->bindValue(":id", $product->getId());
-    
+            if ($product->getImage()) {
+                $query = "UPDATE " . $this->table_name .
+                    " SET name = :name, description = :description, supplier_id = :supplier_id, image = :image" .
+                    " WHERE id = :id";
+                
+                $stmt = $this->conn->prepare($query);
+
+                // bind parameters
+                $stmt->bindValue(":name", $product->getName());
+                $stmt->bindValue(":description", $product->getDescription());
+                $stmt->bindValue(":supplier_id", $supplier->getId());
+                $stmt->bindValue(":id", $product->getId());
+                $stmt->bindValue(":image", $product->getImage());
+
+            }else {
+                $query = "UPDATE " . $this->table_name .
+                    " SET name = :name, description = :description, supplier_id = :supplier_id" .
+                    " WHERE id = :id";
+        
+                $stmt = $this->conn->prepare($query);
+        
+                // bind parameters
+                $stmt->bindValue(":name", $product->getName());
+                $stmt->bindValue(":description", $product->getDescription());
+                $stmt->bindValue(":supplier_id", $supplier->getId());
+                $stmt->bindValue(":id", $product->getId());
+            }
+
             // se produto atualizar, atuliazar estoque
             if ($stmt->execute()) {
                 $stockDao = new PostgresStockDao($this->conn);
@@ -130,7 +146,7 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
 
         $product = null;
 
-        $query = "SELECT p.id, p.name , p.description, s.price, s.quantity, sup.id as sup_id, sup.name as sup_name" .
+        $query = "SELECT p.id, p.name , p.description, p.image, s.price, s.quantity, sup.id as sup_id, sup.name as sup_name" .
                  " FROM " . $this->table_name ." as p 
                  LEFT JOIN stocks as s ON s.product_id=p.id 
                  JOIN suppliers as sup ON sup.id=p.supplier_id 
@@ -148,6 +164,9 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
             $supplier = new Supplier($row['sup_id'],$row['sup_name'],null,null,null,null);
             $stock = new Stock(null,$row['quantity'], $row['price'],$row['id']);
             $product = new Product($row['id'], $row['name'], $row['description'], $supplier, $stock);
+            if ($row['image']) {
+                $product->setImage(stream_get_contents($row['image']));
+            }
         }
 
         return $product;
@@ -157,7 +176,7 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
 
         $product = null;
 
-        $query = "SELECT id, name, description, price, quantity" .
+        $query = "SELECT id, name, description, price, quantity, p.image" .
                  " FROM " . $this->table_name .
                  " WHERE name = ? LIMIT 1 OFFSET 0";
 
@@ -168,55 +187,28 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
             $product = new Product($row['id'], $row['name'], $row['description'], $row['price'], $row['quantity']);
+            if ($row['image']) {
+                $product->setImage(stream_get_contents($row['image']));
+            }
         }
 
         return $product;
     }
 
-    public function getAll() {
-
+    public function getAll($search_id, $search_name, $limit, $offset) {
         $products = array();
 
         $query = "SELECT
                     p.id AS id,
                     p.name AS name,
                     p.description AS description,
+                    p.image,
                     s.quantity AS quantity,
                     s.price AS price,
                     sup.name AS supplier_name
-                FROM $this->table_name p 
-                LEFT JOIN stocks s ON p.id = s.product_id
-                JOIN suppliers sup ON p.supplier_id = sup.id;";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            extract($row);
-            $supplier = new Supplier(null,$supplier_name,null,null,null,null);
-            $stock = new Stock(null,$quantity,$price,$id);
-            $products[] = new Product($id, $name, $description,$supplier,$stock);
-        }
-
-        return $products;
-    }
-
-    public function getAllBySearchedInputs($search_id, $search_name) {
-        $products = array();
-
-        $query = "SELECT
-                    p.id AS id,
-                    p.name AS name,
-                    p.description AS description,
-                    s.quantity AS quantity,
-                    s.price AS price,
-                    sup.name AS supplier_name
-                FROM
-                    $this->table_name p
-                JOIN
-                    stocks s ON p.id = s.product_id
-                JOIN
-                    suppliers sup ON p.supplier_id = sup.id 
+                FROM $this->table_name p
+                JOIN stocks s ON p.id = s.product_id
+                JOIN suppliers sup ON p.supplier_id = sup.id 
                 WHERE true";
 
         // verifica se input do id foi preenchido
@@ -225,23 +217,46 @@ class PostgresProductDao extends PostgresDao implements ProductDao {
         }
         // verifica se input do nome foi preenchido
         if(!empty($search_name)) {
-            $query.= " AND p.name LIKE '%$search_name%'";
-            // print_r($query);
-            // exit;
+            $query.= " AND upper(p.name) LIKE upper('%$search_name%')";
         }
         //ordena por id crescente
-        $query.= " ORDER BY p.id ASC";
+        $query.= " ORDER BY p.id ASC";     
+        $query.= " LIMIT :limit OFFSET :offset;";
+
         $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
             $supplier = new Supplier(null,$supplier_name,null,null,null,null);
             $stock = new Stock(null,$quantity,$price,$id);
-            $products[] = new Product($id, $name, $description,$supplier,$stock);
+            $product = new Product($id, $name, $description,$supplier,$stock);
+            if ($image) {
+                $product->setImage(stream_get_contents($image));
+            }
+            $products[] = $product;
         }
 
         return $products;
+    }
+
+    public function countAll($search_id, $search_name) {
+        $query = "SELECT COUNT(*) AS total FROM $this->table_name WHERE true ";
+
+        // verifica se input do id foi preenchido
+        if(!empty($search_id)) {
+            $query.= " AND id = $search_id";
+        }
+        // verifica se input do nome foi preenchido
+        if(!empty($search_name)) {
+            $query.= " AND upper(name) LIKE upper('%$search_name%')";
+        }
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_OBJ)->total;
     }
 
 }
