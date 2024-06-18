@@ -107,9 +107,11 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
                     $quantidade_estoque = $result['quantity'];
                     $product_name = $result['name'];
                     // Verificar se há saldo suficiente
-                    if ($quantidade_estoque < $quantidade_desejada) {
+                    if ($quantidade_estoque < $quantidade_desejada && $quantidade_estoque>0) {
                         // Não há saldo suficiente, retorna mensagem personalizada
-                        return "O produto '$product_name' não tem saldo suficiente no estoque.";
+                        return "O produto '$product_name' possui apenas $quantidade_estoque unidades.";
+                    } else {
+                        return "O produto '$product_name' não possui estoque.";
                     }
                 } else {
                     // Produto não encontrado no estoque

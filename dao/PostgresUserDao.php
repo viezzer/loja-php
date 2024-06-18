@@ -58,7 +58,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
     public function update(&$user) {
 
         $query = "UPDATE " . $this->table_name . 
-        " SET login = :login, password = :password, name = :name" .
+        " SET login = :login, password = :password, name = :name, role = :role" .
         " WHERE id = :id";
 
         $stmt = $this->conn->prepare($query);
@@ -68,6 +68,7 @@ class PostgresUserDao extends PostgresDao implements UserDao {
         $stmt->bindValue(":password", md5($user->getPassword()));
         $stmt->bindValue(":name", $user->getName());
         $stmt->bindValue(':id', $user->getId());
+        $stmt->bindValue(':role', $user->getRole());
 
         // execute the query
         if($stmt->execute()){

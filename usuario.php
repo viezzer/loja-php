@@ -56,25 +56,33 @@ $user = $dao->getById($_GET['id']);
                         echo '<div class="alert alert-warning" role="alert">Erro desconhecido.</div>';
                     }
                 }
-                echo '
-                <form action="atualiza_usuario.php" method="post">
-                    <legend>Cadastro de usuário</legend>
-                    <input type="hidden" value="'.$user->getId().'" name="id">
-                    <div class="row g-3 mb-3">
-                        <div class="col-lg-6">
-                            <label for="inputName" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="inputName" name="name" value="'.$user->getName().'" '.$edit.'>
-                        </div>
-                        <div class="col-lg-6">
-                            <label for="inputLogin" class="form-label">Login</label>
-                            <input type="text" class="form-control" id="inputLogin" name="login" value="'.$user->getLogin().'" '.$edit.'>
-                        </div>
-                    </div>';
-                    if($edit!='disabled') {
-                        echo '<button type="submit" class="btn btn-success">Salvar</button>';
-                    }
-                    echo '</form>';
             ?>
+            <form action="atualiza_usuario.php" method="post">
+                <legend>Cadastro de usuário</legend>
+                <input type="hidden" value="<?php echo $user->getId(); ?>" name="id">
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-6">
+                        <label for="inputName" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="inputName" name="name" value="<?php echo $user->getName(); ?>" <?php echo $edit; ?>>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="inputLogin" class="form-label">Login</label>
+                        <input type="text" class="form-control" id="inputLogin" name="login" value="<?php echo $user->getLogin(); ?>" <?php echo $edit; ?>>
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-6">
+                        <label for="inputRole" class="form-label">Role</label>
+                        <select class="form-select" id="inputRole" name="user_role" <?php echo $edit; ?>>
+                            <option value="client" <?php echo $user->getRole() == 'client' ? 'selected' : ''; ?>>Cliente</option>
+                            <option value="admin" <?php echo $user->getRole() == 'admin' ? 'selected' : ''; ?>>Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <?php if($edit != 'disabled') { ?>
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                <?php } ?>
+            </form>
         </div>
     </div >
 </div>
