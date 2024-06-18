@@ -30,19 +30,28 @@
 			
 			if(isset($_SESSION["user_role"]) && $_SESSION["user_role"] == 'admin') {
 				// Informações de login
-				echo "<li class='nav-item dropdown '>
+				echo "<li class='nav-item dropdown'>
 						<a class='nav-link dropdown-toggle' href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false'>
 						{$_SESSION['user_name']}
 						</a>
 						<ul class='dropdown-menu'>
-						<li><a class='dropdown-item' href='usuarios.php'>Usuários</a></li>
-						<li><a class='dropdown-item' href='fornecedores.php'>Fornecedores</a></li>
-						<li><a class='dropdown-item' href='produtos.php'>Produtos</a></li>
-						<li><a class='dropdown-item' href='executa_logout.php'>Logout</a></li>
+							<li><a class='dropdown-item' href='usuarios.php'>Usuários</a></li>
+							<li><a class='dropdown-item' href='fornecedores.php'>Fornecedores</a></li>
+							<li><a class='dropdown-item' href='produtos.php'>Produtos</a></li>
+							<li><a class='dropdown-item' href='executa_logout.php'>Logout</a></li>
 						</ul>
 					</li>";
-			} else if (isset($_SESSION["user_role"]) && $_SESSION["user_role"] && $_SESSION["user_role"] == 'client') {
-				
+			} else if (isset($_SESSION["user_role"]) && $_SESSION["user_role"] == 'client') {
+				echo "<li class='nav-item dropdown'>
+						<a class='nav-link dropdown-toggle' href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false'>
+						{$_SESSION['user_name']}
+						</a>
+						<ul class='dropdown-menu'>
+							<li><a class='dropdown-item' href='#'>Carrinho</a></li>
+							<li><a class='dropdown-item' href='executa_logout.php'>Logout</a></li>
+						</ul>
+					</li>";
+					
 			} else {
 				echo '<li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>';
 			}
