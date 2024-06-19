@@ -23,6 +23,10 @@ switch ($request_method) {
             $orders = $dao->getAllBySearchedInputs($client_name, $order_number);
             if ($orders != null) {
                 // var_dump($orders);
+                $response = [
+                    'orders' => $orders,
+                    'total_pages' => $total_pages
+                ];
                 echo json_encode($orders);
                 http_response_code(200); // 200 OK
                 exit;
