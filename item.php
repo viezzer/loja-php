@@ -29,10 +29,7 @@ $stock = $product->getStock();
             <h3 class="text-danger mb-4"><?php echo $stock->getPrice()?> R$</h3>
             <div class="row">
                 <div class="col-auto mb-4">
-                    <button type="button" class="btn btn-primary btn-lg">Comprar Agora</button>
-                </div>
-                <div class="col-auto mb-4">
-                    <button type="button" class="btn btn-outline-primary btn-lg">Adicionar ao Carrinho</button>
+                    <button type="button" class="btn btn-primary btn-lg">Adicionar ao Carrinho</button>
                 </div>
             </div>
             <hr>
