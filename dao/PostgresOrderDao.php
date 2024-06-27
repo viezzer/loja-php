@@ -324,11 +324,12 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
 
     public function getAllBySearchedInputs($client_name, $order_number) {
         $orders = array();
-
+    
         $query = "SELECT o.id, o.number, o.order_date, o.delivery_date, o.status, u.name AS client_name	
             FROM ".$this->table_name." as o 
             JOIN users as u ON o.client_id = u.id
             WHERE true";
+        
         // verifica se input do id foi preenchido
         if(!empty($client_name)) {
             $query.= " AND UPPER(u.name) LIKE UPPER('%$client_name%')";
@@ -339,10 +340,33 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
         }
         // ordena por id crescente
         $query.= " ORDER BY o.number ASC";
+        
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $order_id = $row['id'];
+            
+            // Busca itens do pedido
+            $item_query = "SELECT oi.quantity, oi.price, p.name AS product_name
+                           FROM order_items as oi
+                           JOIN products as p ON oi.product_id = p.id
+                           WHERE oi.order_id = :order_id";
+            
+            $item_stmt = $this->conn->prepare($item_query);
+            $item_stmt->bindParam(':order_id', $order_id);
+            $item_stmt->execute();
+            
+            $items = array();
+            while ($item_row = $item_stmt->fetch(PDO::FETCH_ASSOC)) {
+                $items[] = array(
+                    'product_name' => $item_row['product_name'],
+                    'quantity' => $item_row['quantity'],
+                    'price' => $item_row['price']
+                );
+            }
+    
+            // Cria o objeto Order com os itens
             $order = new Order(
                 $row['id'],
                 $row['number'],
@@ -350,19 +374,21 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
                 $row['delivery_date'],
                 $row['status'],
                 null,
-                null
+                $items // Adiciona os itens ao pedido
             );
-            $client = new User(null,null,null,$row['client_name'],null);
+            
+            $client = new User(null, null, null, $row['client_name'], null);
             $order->setClient($client);
     
             $orders[] = $order->toJSON();
         }
-        
-        if(sizeof($orders)>0) {
+    
+        if (sizeof($orders) > 0) {
             return json_encode($orders);
         }
         return null;
     }
+    
 
 }
 ?>
