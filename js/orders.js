@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`orderApi.php?client_name=${clientName}`);
             let orders = await response.json();
             orders = JSON.parse(orders);
+            console.log(orders)
             displayOrders(orders);
         } catch (error) {
             console.error('Error fetching orders:', error);
@@ -26,9 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <th scope="col">Numero</th>
                         <th scope="col">Data Pedido</th>
                         <th scope="col">Data Entrega</th>
-                        <th scope="col">Satus</th>
-                        <th scope="col">Cliente</th>
-                        <th scope="col"></th>
+                        <th scope="col">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,9 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
         orders.forEach(order => {
             tableHtml += `
                 <tr>
-                    <th scope="row">${order.number}</th>
-                    <td><a href="produto.php?id=${order.id}">${order.orderDate}</a></td>
-                </tr>
+                    <th scope="row"><a href="produto.php?id=${order.id}">${order.number}</a></th>
+                    <td>${order.orderDate}</td>
+                    <td>${order.deliveryDate}</td>
+                    <td>${order.status}</td>
+                    </tr>
             `;
         });
 
