@@ -12,6 +12,7 @@ switch ($request_method) {
     case 'GET':
         $order_number = intval(@$_GET["order_number"]);
         $client_name = @$_GET['client_name'];
+        // echo json_encode($order_number);
         // se existe order_number, procura o pedido com o número informado
         if(isset($order_number) && $order_number>0) {
             $order = $dao->getOrderByNumber($order_number);

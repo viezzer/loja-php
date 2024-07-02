@@ -2,11 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const ordersContainer = document.getElementById('orders-container');
 
     async function fetchOrders() {
-        try {
-            const response = await fetch(`orderApi.php?client_name=${clientName}`);
+        try {            
+            const response = await fetch(`orderApi.php?client_name=${clientName}&order_number=${orderNumber}`);
             let orders = await response.json();
             orders = JSON.parse(orders);
             console.log(orders);
+            if (!Array.isArray(orders)) {
+                orders = [orders];
+            }
             displayOrders(orders);
         } catch (error) {
             console.error('Error fetching orders:', error);
@@ -70,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 tableHtml += `
                     <tr>
-                        <td><img src='https://via.placeholder.com/300' alt="${item.description}" class="img-fluid" style="max-width: 300px;"></td>
+                        <td><img src='https://via.placeholder.com/30' alt="${item.description}" class="img-fluid" style="max-width: 300px;"></td>
                         <td>${item.product_name}</td>
                         <td>${item.quantity}</td>
                         <td>${parseFloat(item.price).toFixed(2)}</td>
