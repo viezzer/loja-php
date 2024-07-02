@@ -93,9 +93,9 @@ include_once "layout/layout_header.php";
                 </div>
             <?php endif; ?>
 
-            <?php if ($_SESSION['user_name'] === $order_data['client_name']): ?>
+            <?php if ($_SESSION['user_name'] === $order_data['client_name'] && $order_data['status']!== "CANCELADO"): ?>
                 <div class="mt-3">
-                    <a href="cancelar_pedido.php?id=<?php echo $order_id; ?>" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja cancelar este pedido?')">Cancelar Pedido</a>
+                    <a href="cancela_pedido.php?id=<?php echo $order_id; ?>" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja cancelar este pedido?')">Cancelar Pedido</a>
                 </div>
             <?php endif; ?>
             

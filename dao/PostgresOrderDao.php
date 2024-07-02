@@ -388,6 +388,25 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
         }
         return null;
     }
+
+    public function setFinished($item_id) {
+        try {
+            $query = "UPDATE orders SET status = 'CANCELADO' WHERE id = :item_id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':item_id', $item_id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                return true; // Atualização bem-sucedida
+            } else {
+                return false; // Nenhum item atualizado (item_id não encontrado)
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao atualizar status do item: " . $e->getMessage());
+        }
+    }
+    
+    
     
 
 }
