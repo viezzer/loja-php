@@ -3,42 +3,47 @@ $page_title = "Produto";
 include_once "layout/layout_header.php";
 include_once "fachada.php";
 
-// Check if the form is submitted
+// Verifica se o formulário foi enviado e se 'add_to_cart' está definido
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_cart'])) {
-    // Assuming you have a session started already
-    session_start();
-
-    // Retrieve product ID and quantity from POST
+    // Obtém o ID do produto e a quantidade do POST
     $id = $_POST['product_id'];
     $quantity = $_POST['quantity'];
 
-    // Fetch product details from database based on $id (similar to how you fetched in your existing code)
+    // Busca detalhes do produto no banco de dados usando $id
     $productDao = $factory->getProductDao();
     $product = $productDao->getById($id);
 
-    // Create an array to store product details
-    $cart_item = array(
-        'id' => $id,
-        'name' => $product->getName(),
-        'price' => $product->getStock()->getPrice(),
-        'quantity' => $quantity
-    );
-
-    // Initialize the session cart if it doesn't exist
-    if (!isset($_SESSION['cart'])) {
-        $_SESSION['cart'] = array();
+    // Verifica se o produto já está no carrinho
+    $item_found = false;
+    foreach ($_SESSION['cart'] as &$item) {
+        if ($item['id'] == $id) {
+            // Se encontrado, aumenta apenas a quantidade
+            $item['quantity'] += $quantity;
+            $item_found = true;
+            break;
+        }
     }
 
-    // Add the item to the session cart
-    $_SESSION['cart'][] = $cart_item;
+    // Se não encontrado, adiciona o novo item ao carrinho
+    if (!$item_found) {
+        $cart_item = array(
+            'id' => $id,
+            'name' => $product->getName(),
+            'price' => $product->getStock()->getPrice(),
+            'quantity' => $quantity
+        );
+        $_SESSION['cart'][] = $cart_item;
+    }
 
-    // Optionally, you can redirect to another page after adding to cart
+    // Redireciona para a página do carrinho
     header('Location: carrinho.php');
-    // exit();
+    exit;
 }
 
+// Obtém o ID do produto da query string
 $id = $_GET['id'];
 
+// Busca informações do produto usando $id
 $supplierDao = $factory->getSupplierDao();
 $suppliers = $supplierDao->getSuppliersOptionList();
 
@@ -46,7 +51,6 @@ $productDao = $factory->getProductDao();
 $product = $productDao->getById($id);
 $supplier = $product->getSupplier();
 $stock = $product->getStock();
-
 ?>
 
 <div class="container mt-4">
