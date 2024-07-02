@@ -4,7 +4,6 @@ include_once('model/User.php');
 include_once('model/Supplier.php');
 include_once('model/Address.php');
 include_once('model/Product.php');
-include_once('model/ShoppingCart.php');
 include_once('model/Stock.php');
 include_once('dao/UserDao.php');
 include_once('dao/SupplierDao.php');

@@ -28,7 +28,7 @@ $stock = $product->getStock();
             <p class="text-muted mb-3">Em Estoque: <?php echo $stock->getQuantity()?></p>
             <h3 class="text-danger mb-4"><?php echo $stock->getPrice()?> R$</h3>
             <div class="row">
-                <form action="insere_carrinho.php" method="POST">
+                <form>
                     <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
                     <div class="form-group">
                         <label for="quantidade">Quantidade:</label>

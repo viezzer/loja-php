@@ -9,7 +9,7 @@ if (!(isset($_SESSION['user_name']) && $_SESSION['user_name'] != 'admin')) {
     exit; 
 }
 
-$page_title = "Meus Pedidos";
+$page_title = "Pedidos";
 include_once 'verifica.php';
 include_once "layout/layout_header.php";
 
@@ -53,7 +53,7 @@ $client_name = '';
     <!-- listagem de pedidos -->
     <div class="row">
         <div class="col">
-            <legend>Meus pedidos</legend>
+            <legend>Todos os pedidos</legend>
             <div id="orders-container">
                 <!-- A tabela será preenchida pelo JavaScript -->
             </div>
@@ -63,7 +63,7 @@ $client_name = '';
 <script>
     const clientName = "<?php echo $client_name; ?>";
 </script>
-<script src="js/orders.js"></script>
+<script src="js/adminOrders.js"></script>
 <?php
 // layout do rodapé
 include_once "layout/layout_footer.php";

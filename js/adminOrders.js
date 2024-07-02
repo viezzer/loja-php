@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <thead>
                     <tr>
                         <th scope="col">Numero</th>
+                        <th scope="col">Cliente</th>
                         <th scope="col">Data Pedido</th>
                         <th scope="col">Data Entrega</th>
                         <th scope="col">Valor total</th>
@@ -43,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tableHtml += `
                 <tr>
                     <th scope="row"><a href="produto.php?id=${order.id}">${order.number}</a></th>
+                    <td>${order.client_name}</td>
                     <td>${order.orderDate}</td>
                     <td>${order.deliveryDate}</td>
                     <td>${totalValue.toFixed(2)}</td>
