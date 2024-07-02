@@ -2,9 +2,41 @@
 $page_title = "Produto";
 include_once "layout/layout_header.php";
 include_once "fachada.php";
-if(!isset($_GET['id'])) {
-    header('Location: produtos.php');
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_cart'])) {
+    // Assuming you have a session started already
+    session_start();
+
+    // Retrieve product ID and quantity from POST
+    $id = $_POST['product_id'];
+    $quantity = $_POST['quantity'];
+
+    // Fetch product details from database based on $id (similar to how you fetched in your existing code)
+    $productDao = $factory->getProductDao();
+    $product = $productDao->getById($id);
+
+    // Create an array to store product details
+    $cart_item = array(
+        'id' => $id,
+        'name' => $product->getName(),
+        'price' => $product->getStock()->getPrice(),
+        'quantity' => $quantity
+    );
+
+    // Initialize the session cart if it doesn't exist
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = array();
+    }
+
+    // Add the item to the session cart
+    $_SESSION['cart'][] = $cart_item;
+
+    // Optionally, you can redirect to another page after adding to cart
+    header('Location: carrinho.php');
+    // exit();
 }
+
 $id = $_GET['id'];
 
 $supplierDao = $factory->getSupplierDao();
@@ -27,21 +59,18 @@ $stock = $product->getStock();
             <p class="text-muted mb-3">Fornecedor: <?php echo $supplier->getName()?></p>
             <p class="text-muted mb-3">Em Estoque: <?php echo $stock->getQuantity()?></p>
             <h3 class="text-danger mb-4"><?php echo $stock->getPrice()?> R$</h3>
-            <div class="row">
-                <form>
-                    <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
-                    <div class="form-group">
-                        <label for="quantidade">Quantidade:</label>
-                        <input type="number" id="quantidade" name="quantity" class="form-control" value="1" min="1">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-lg">Adicionar ao Carrinho</button>
-                </form>
-            </div>
+            <form method="post" action="">
+                <div class="row">
+                    <label for="quantidade">Quantidade:</label>
+                    <input type="hidden" name="product_id" value="<?php echo $id ?>">
+                    <input type="number" id="quantidade" name="quantity" class="form-control" value="1" min="1">
+                    <button type="submit" name="add_to_cart" class="btn btn-primary btn-lg">Adicionar ao Carrinho</button>
+                </div>
+            </form>
             <hr>
         </div>
     </div>
 </div>
-
 
 <?php
 // layout do rodapé
