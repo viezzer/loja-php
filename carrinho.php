@@ -1,7 +1,8 @@
 <?php
+session_start();
+
 $page_title = "Carrinho de Compras";
 include_once "layout/layout_header.php";
-// Inclua seu arquivo fachada.php aqui se necessário
 ?>
 
 <div class="container mt-5">
@@ -10,9 +11,7 @@ include_once "layout/layout_header.php";
     <div class="row">
         <div class="col-md-8">
             <?php
-            // Verifica se existe algo no carrinho na sessão
             if (!empty($_SESSION['cart'])) {
-                // Loop pelos itens do carrinho
                 foreach ($_SESSION['cart'] as $item) {
             ?>
                 <div class="card mb-3">
@@ -25,9 +24,9 @@ include_once "layout/layout_header.php";
                                 <h5 class="card-title"><?php echo $item['name']; ?></h5>
                                 <p class="card-text text-muted">Preço: <?php echo $item['price']; ?> R$</p>
                                 <div class="input-group mb-3" style="max-width: 150px;">
-                                    <button class="btn btn-outline-secondary" type="button">-</button>
-                                    <input type="text" class="form-control text-center" value="<?php echo $item['quantity']; ?>">
-                                    <button class="btn btn-outline-secondary" type="button">+</button>
+                                    <button class="btn btn-outline-secondary btn-decrease" data-product-id="<?php echo $item['id']; ?>" type="button">-</button>
+                                    <input type="number" class="form-control text-center quantity-input" data-product-id="<?php echo $item['id']; ?>" value="<?php echo $item['quantity']; ?>">
+                                    <button class="btn btn-outline-secondary btn-increase" data-product-id="<?php echo $item['id']; ?>" type="button">+</button>
                                 </div>
                                 <form method="post" action="excluir_carrinho.php">
                                     <input type="hidden" name="product_id" value="<?php echo $item['id']; ?>">
@@ -38,9 +37,8 @@ include_once "layout/layout_header.php";
                     </div>
                 </div>
             <?php
-                } // Fim do loop foreach
+                }
             } else {
-                // Caso o carrinho esteja vazio
                 echo '<div class="alert alert-info alert-dismissible fade show" role="alert">
                           Seu carrinho está vazio. <a href="index.php" class="alert-link">Adicione itens agora!</a>
                           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -56,7 +54,6 @@ include_once "layout/layout_header.php";
                     <h5 class="card-title">Resumo do Carrinho</h5>
                     <ul class="list-group mb-3">
                         <?php
-                        // Calculando o total e contando itens
                         $total_items = 0;
                         $total_price = 0;
                         
@@ -79,6 +76,60 @@ include_once "layout/layout_header.php";
 </div>
 
 <?php
-// layout do rodapé
 include_once "layout/layout_footer.php";
 ?>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.btn-increase').click(function() {
+        var productId = $(this).data('product-id');
+        var quantityInput = $(this).closest('.input-group').find('.quantity-input');
+        var newQuantity = parseInt(quantityInput.val()) + 1;
+        
+        updateCart(productId, newQuantity, quantityInput);
+    });
+
+    $('.btn-decrease').click(function() {
+        var productId = $(this).data('product-id');
+        var quantityInput = $(this).closest('.input-group').find('.quantity-input');
+        var newQuantity = parseInt(quantityInput.val()) - 1;
+
+        if (newQuantity >= 1) {
+            updateCart(productId, newQuantity, quantityInput);
+        }
+    });
+
+    $('.quantity-input').change(function() {
+        var productId = $(this).data('product-id');
+        var newQuantity = parseInt($(this).val());
+
+        if (!isNaN(newQuantity) && newQuantity >= 1) {
+            updateCart(productId, newQuantity, $(this));
+        } else {
+            // Revert to previous value or handle error
+            $(this).val($(this).data('previous-value'));
+        }
+    });
+
+    function updateCart(productId, newQuantity, quantityInput) {
+        // Store previous value
+        quantityInput.data('previous-value', quantityInput.val());
+        quantityInput.val(newQuantity);
+
+        $.ajax({
+            url: 'atualiza_carrinho.php',
+            method: 'POST',
+            data: { product_id: productId, quantity: newQuantity },
+            success: function(response) {
+                console.log('Carrinho atualizado com sucesso.');
+                // Recarrega a página após a atualização do carrinho
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error('Erro ao atualizar o carrinho:', error);
+            }
+        });
+    }
+});
+</script>
