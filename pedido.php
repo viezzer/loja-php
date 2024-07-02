@@ -39,6 +39,7 @@ include_once "layout/layout_header.php";
 ?>
 
 <div class="container mt-4">
+    <?php echo "<a class='btn btn-secondary btn-sm mb-2' href='pedidos_cliente.php'>Voltar</a>"; ?>
     <?php if (!empty($error_messages)): ?>
         <div class="alert alert-danger" role="alert">
             <?php foreach ($error_messages as $error): ?>

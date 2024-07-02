@@ -107,7 +107,7 @@ $stock = $product->getStock();
                     <input type="hidden" name="product_id" value="<?php echo $id ?>">
                     <input type="hidden" name="stock_quantity" value="<?php echo $stock->getQuantity() ?>"> <!-- Campo oculto para salvar a quantidade de estoque -->
                     <!-- Adicionado o atributo max para definir o máximo de quantidade permitida -->
-                    <input type="number" id="quantidade" name="quantity" class="form-control" value="1" min="1" max="<?php echo $stock->getQuantity() ?>">
+                    <input type="number" id="quantidade" name="quantity" class="form-control mb-3" value="1" min="1" max="<?php echo $stock->getQuantity() ?>">
                 </div>
                 <?php if ($stock->getQuantity() > 0): ?>
                     <button type="submit" name="add_to_cart" class="btn btn-primary btn-lg">Adicionar ao Carrinho</button>
