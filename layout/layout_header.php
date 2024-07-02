@@ -38,6 +38,7 @@
 							<li><a class='dropdown-item' href='usuarios.php'>Usuários</a></li>
 							<li><a class='dropdown-item' href='fornecedores.php'>Fornecedores</a></li>
 							<li><a class='dropdown-item' href='produtos.php'>Produtos</a></li>
+							<li><a class='dropdown-item' href='pedidos.php'>Pedidos</a></li>
 							<li><a class='dropdown-item' href='executa_logout.php'>Logout</a></li>
 						</ul>
 					</li>";
@@ -47,7 +48,7 @@
 						{$_SESSION['user_name']}
 						</a>
 						<ul class='dropdown-menu'>
-							<li><a class='dropdown-item' href=''>Carrinho</a></li>
+							<li><a class='dropdown-item' href='carrinho.php'>Carrinho</a></li>
 							<li><a class='dropdown-item' href='pedidos_cliente.php'>Meus Pedidos</a></li>
 							<li><a class='dropdown-item' href='executa_logout.php'>Logout</a></li>
 						</ul>

@@ -60,7 +60,7 @@ $total_pages = ceil($total_items / $limit);
                         <div class="card-body">
                             <h5 class="card-title"><?php echo $product->getName(); ?></h5>
                             <p class="card-text text-truncate"><?php echo $product->getDescription(); ?></p>
-                            <a href="item?id=<?php echo $product->getId()?>" class="btn btn-primary">Ver Detalhes</a>
+                            <a href="item.php?id=<?php echo $product->getId()?>" class="btn btn-primary">Ver Detalhes</a>
                             <?php if (($product->getStock()) && ($product->getStock()->getQuantity() <= 0)){ ?>
                                 <img src="static/out-of-stock.png" alt="Out of Stock Icon" height="20">
 								<span class="text-secondary fs-6">Indisponível</span>
