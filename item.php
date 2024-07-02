@@ -5,6 +5,12 @@ include_once "fachada.php";
 
 // Verifica se o formulário foi enviado e se 'add_to_cart' está definido
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_cart'])) {
+    if(!isset($_SESSION["loggedin"])) 
+    { 
+        // Usuário não logado! Redireciona para a página de login 
+        header("Location: login.php"); 
+        exit; 
+    }
     // Validação mínima
     $id = isset($_POST['product_id']) ? $_POST['product_id'] : null;
     $quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
