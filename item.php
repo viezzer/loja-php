@@ -25,12 +25,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_cart'])) {
                     $quantity = $stock->getQuantity();
                 }
 
+                // Adiciona o produto ao carrinho junto com a quantidade de estoque atual
+                $cart_item = array(
+                    'id' => $id,
+                    'name' => $product->getName(),
+                    'price' => $stock->getPrice(),
+                    'quantity' => $quantity,
+                    'stock_quantity' => $stock->getQuantity() // Salva a quantidade de estoque atual
+                );
+
                 // Verifica se o produto já está no carrinho
                 $item_found = false;
                 foreach ($_SESSION['cart'] as &$item) {
                     if ($item['id'] == $id) {
                         // Se encontrado, aumenta apenas a quantidade
                         $item['quantity'] += $quantity;
+                        $item['stock_quantity'] = $stock->getQuantity(); // Atualiza a quantidade de estoque no carrinho
                         $item_found = true;
                         break;
                     }
@@ -38,12 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_cart'])) {
 
                 // Se não encontrado, adiciona o novo item ao carrinho
                 if (!$item_found) {
-                    $cart_item = array(
-                        'id' => $id,
-                        'name' => $product->getName(),
-                        'price' => $stock->getPrice(),
-                        'quantity' => $quantity
-                    );
                     $_SESSION['cart'][] = $cart_item;
                 }
 
@@ -95,6 +99,7 @@ $stock = $product->getStock();
                 <div class="form-group">
                     <label for="quantidade">Quantidade:</label>
                     <input type="hidden" name="product_id" value="<?php echo $id ?>">
+                    <input type="hidden" name="stock_quantity" value="<?php echo $stock->getQuantity() ?>"> <!-- Campo oculto para salvar a quantidade de estoque -->
                     <!-- Adicionado o atributo max para definir o máximo de quantidade permitida -->
                     <input type="number" id="quantidade" name="quantity" class="form-control" value="1" min="1" max="<?php echo $stock->getQuantity() ?>">
                 </div>

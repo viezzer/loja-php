@@ -23,6 +23,7 @@ include_once "layout/layout_header.php";
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $item['name']; ?></h5>
                                 <p class="card-text text-muted">Preço: <?php echo $item['price']; ?> R$</p>
+                                <p class="card-text text-muted">Estoque: <?php echo $item['stock_quantity']; ?> </p>
                                 <div class="input-group mb-3" style="max-width: 150px;">
                                     <button class="btn btn-outline-secondary btn-decrease" data-product-id="<?php echo $item['id']; ?>" type="button">-</button>
                                     <input type="number" class="form-control text-center quantity-input" data-product-id="<?php echo $item['id']; ?>" value="<?php echo $item['quantity']; ?>">
@@ -110,29 +111,40 @@ $(document).ready(function() {
         if (!isNaN(newQuantity) && newQuantity >= 1) {
             updateCart(productId, newQuantity, $(this));
         } else {
-            // Revert to previous value or handle error
+
             $(this).val($(this).data('previous-value'));
         }
     });
 
     function updateCart(productId, newQuantity, quantityInput) {
-        // Store previous value
-        quantityInput.data('previous-value', quantityInput.val());
-        quantityInput.val(newQuantity);
+    // Store previous value
+    quantityInput.data('previous-value', quantityInput.val());
 
-        $.ajax({
-            url: 'atualiza_carrinho.php',
-            method: 'POST',
-            data: { product_id: productId, quantity: newQuantity },
-            success: function(response) {
-                console.log('Carrinho atualizado com sucesso.');
-                // Recarrega a página após a atualização do carrinho
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                console.error('Erro ao atualizar o carrinho:', error);
-            }
-        });
+    // Verifica se a nova quantidade não é maior que o estoque
+    var maxQuantity = parseInt(quantityInput.closest('.card-body').find('.card-text.text-muted:eq(1)').text().replace('Estoque: ', '').trim());
+    if (newQuantity > maxQuantity) {
+        alert('A quantidade selecionada excede o estoque disponível.');
+        quantityInput.val(maxQuantity); // Define o valor máximo disponível no estoque
+        return;
     }
+
+    quantityInput.val(newQuantity);
+
+    $.ajax({
+        url: 'atualiza_carrinho.php',
+        method: 'POST',
+        data: { product_id: productId, quantity: newQuantity },
+        success: function(response) {
+            console.log('Carrinho atualizado com sucesso.');
+            // Recarrega a página após a atualização do carrinho
+            location.reload();
+        },
+        error: function(xhr, status, error) {
+            console.error('Erro ao atualizar o carrinho:', error);
+            // Em caso de erro, reverta para o valor máximo disponível no estoque
+            quantityInput.val(maxQuantity);
+        }
+    });
+}
 });
 </script>
