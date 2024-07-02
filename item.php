@@ -15,31 +15,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_cart'])) {
         $product = $productDao->getById($id);
 
         if ($product) {
-            // Verifica se o produto já está no carrinho
-            $item_found = false;
-            foreach ($_SESSION['cart'] as &$item) {
-                if ($item['id'] == $id) {
-                    // Se encontrado, aumenta apenas a quantidade
-                    $item['quantity'] += $quantity;
-                    $item_found = true;
-                    break;
+            $stock = $product->getStock();
+            
+            // Verifica se há estoque suficiente
+            if ($stock->getQuantity() > 0) {
+                // Verifica se a quantidade que o usuário quer adicionar é maior que o estoque disponível
+                if ($quantity > $stock->getQuantity()) {
+                    // Se a quantidade for maior que o estoque, define a quantidade como o máximo disponível
+                    $quantity = $stock->getQuantity();
                 }
-            }
 
-            // Se não encontrado, adiciona o novo item ao carrinho
-            if (!$item_found) {
-                $cart_item = array(
-                    'id' => $id,
-                    'name' => $product->getName(),
-                    'price' => $product->getStock()->getPrice(),
-                    'quantity' => $quantity
-                );
-                $_SESSION['cart'][] = $cart_item;
-            }
+                // Verifica se o produto já está no carrinho
+                $item_found = false;
+                foreach ($_SESSION['cart'] as &$item) {
+                    if ($item['id'] == $id) {
+                        // Se encontrado, aumenta apenas a quantidade
+                        $item['quantity'] += $quantity;
+                        $item_found = true;
+                        break;
+                    }
+                }
 
-            // Redireciona para a página do carrinho
-            header('Location: carrinho.php');
-            exit;
+                // Se não encontrado, adiciona o novo item ao carrinho
+                if (!$item_found) {
+                    $cart_item = array(
+                        'id' => $id,
+                        'name' => $product->getName(),
+                        'price' => $stock->getPrice(),
+                        'quantity' => $quantity
+                    );
+                    $_SESSION['cart'][] = $cart_item;
+                }
+
+                // Redireciona para a página do carrinho
+                header('Location: carrinho.php');
+                exit;
+            } else {
+                // Se o estoque for zero, redireciona de volta para a página do produto
+                header('Location: produto.php?id=' . $id);
+                exit;
+            }
         }
     }
 }
@@ -80,9 +95,14 @@ $stock = $product->getStock();
                 <div class="form-group">
                     <label for="quantidade">Quantidade:</label>
                     <input type="hidden" name="product_id" value="<?php echo $id ?>">
-                    <input type="number" id="quantidade" name="quantity" class="form-control" value="1" min="1">
+                    <!-- Adicionado o atributo max para definir o máximo de quantidade permitida -->
+                    <input type="number" id="quantidade" name="quantity" class="form-control" value="1" min="1" max="<?php echo $stock->getQuantity() ?>">
                 </div>
-                <button type="submit" name="add_to_cart" class="btn btn-primary btn-lg">Adicionar ao Carrinho</button>
+                <?php if ($stock->getQuantity() > 0): ?>
+                    <button type="submit" name="add_to_cart" class="btn btn-primary btn-lg">Adicionar ao Carrinho</button>
+                <?php else: ?>
+                    <button type="button" class="btn btn-primary btn-lg" disabled>Esgotado</button>
+                <?php endif; ?>
             </form>
             <hr>
         </div>
