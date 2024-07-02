@@ -13,7 +13,9 @@ $page_title = "Pedidos";
 include_once 'verifica.php';
 include_once "layout/layout_header.php";
 
-$client_name = ''; 
+$client_name = isset($_GET['client_name']) ? $_GET['client_name'] : '';
+$order_number = isset($_GET['order_number']) ? $_GET['order_number'] : '';
+
 ?>
 <div class="container py-4">
     <!-- Banner de alerta -->
@@ -50,6 +52,23 @@ $client_name = '';
             ?>
         </div>
     </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form action="pedidos.php" method="get">
+                <div class="row">
+                    <div class="col-lg-2 mb-2">
+                        <button type='submit' class='btn btn-sm btn-primary '>Pesquisar</button>
+                    </div>
+                    <div class="col-lg-7">
+                        <input type="text" class="form-control form-control-sm mb-2" id='client_name' name='client_name' placeholder="<?php echo (isset($_GET['client_name']) && $_GET['client_name']) ? $_GET['client_name'] : 'Nome' ?>">
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control form-control-sm mb-2" id='order_number' name='order_number' placeholder="<?php echo (isset($_GET['order_number']) && $_GET['order_number']) ? $_GET['order_number'] : 'ID' ?>">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- listagem de pedidos -->
     <div class="row">
         <div class="col">
@@ -62,6 +81,7 @@ $client_name = '';
 </div>
 <script>
     const clientName = "<?php echo $client_name; ?>";
+    const orderNumber = "<?php echo $order_number; ?>";
 </script>
 <script src="js/adminOrders.js"></script>
 <?php
