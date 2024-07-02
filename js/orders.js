@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             tableHtml += `
                 <tr>
-                    <th scope="row"><a href="produto.php?id=${order.id}">${order.number}</a></th>
+                    <th scope="row"><a href="pedido.php?id=${order.id}">${order.number}</a></th>
                     <td>${order.orderDate}</td>
                     <td>${order.deliveryDate}</td>
                     <td>${totalValue.toFixed(2)}</td>
