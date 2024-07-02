@@ -6,9 +6,9 @@ if(isset($_GET['id'])) {
     $orderDao = $factory->getOrderDao();
 
     try {
-        $result = $orderDao->setCanceled($item_id);
+        $result = $orderDao->setFinished($item_id);
         if ($result) {
-            echo "Status do item atualizado para 'Finalizado' com sucesso!";
+            echo "Status do item atualizado para 'Entregue' com sucesso!";
 
             header("Location: pedidos_cliente.php");
             exit(); 

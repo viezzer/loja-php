@@ -88,17 +88,12 @@ include_once "layout/layout_header.php";
 
             <?php if ($_SESSION['user_role'] === 'admin'): ?>
                 <div class="mt-3">
-                    <a href="atualiza_pedido.php?id=<?php echo $order_id; ?>" class="btn btn-primary">Editar Pedido</a>
+                    <a href="finalizar_pedido.php?id=<?php echo $order_id; ?>" class="btn btn-primary">Finalizar Pedido</a>
                     <a href="excluir_pedido.php?id=<?php echo $order_id; ?>" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja deletar este pedido?')">Deletar Pedido</a>
-                </div>
-            <?php endif; ?>
-
-            <?php if ($_SESSION['user_name'] === $order_data['client_name'] && $order_data['status']!== "CANCELADO"): ?>
-                <div class="mt-3">
                     <a href="cancela_pedido.php?id=<?php echo $order_id; ?>" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja cancelar este pedido?')">Cancelar Pedido</a>
+
                 </div>
-            <?php endif; ?>
-            
+            <?php endif; ?>            
         </div>
     <?php endif; ?>
 </div>

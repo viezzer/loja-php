@@ -391,6 +391,27 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
 
     public function setFinished($item_id) {
         try {
+            $delivery_date = date('Y-m-d H:i:s'); // Data e hora atual
+            
+            $query = "UPDATE orders SET status = 'ENTREGUE', delivery_date = :delivery_date WHERE id = :item_id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':item_id', $item_id, PDO::PARAM_INT);
+            $stmt->bindValue(':delivery_date', $delivery_date, PDO::PARAM_STR);
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                return true; // Atualização bem-sucedida
+            } else {
+                return false; // Nenhum item atualizado (item_id não encontrado)
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao atualizar status do item: " . $e->getMessage());
+        }
+    }
+    
+
+    public function setCanceled($item_id) {
+        try {
             $query = "UPDATE orders SET status = 'CANCELADO' WHERE id = :item_id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindValue(':item_id', $item_id, PDO::PARAM_INT);
@@ -404,10 +425,7 @@ class PostgresOrderDao extends PostgresDao implements OrderDao {
         } catch (PDOException $e) {
             throw new Exception("Erro ao atualizar status do item: " . $e->getMessage());
         }
-    }
-    
-    
-    
+    } 
 
 }
 ?>
