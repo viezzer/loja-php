@@ -67,7 +67,10 @@ include_once "layout/layout_header.php";
                             <strong><?php echo number_format($total_price, 2); ?> R$</strong>
                         </li>
                     </ul>
-                    <button type="button" class="btn btn-primary btn-lg btn-block">Finalizar Compra</button>
+                    <form method="post" action="finalizar_compra.php">
+    <button type="submit" class="btn btn-primary btn-lg btn-block">Finalizar Compra</button>
+</form>
+
                 </div>
             </div>
         </div>
