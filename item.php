@@ -1,33 +1,17 @@
 <?php
-session_start(); // Start session to initialize $_SESSION superglobal
-
-include_once "dao/PostgresDaoFactory.php";
-
-if (!isset($_SESSION['user_id'])) {
-    // Redirect user if user_id is not set in session
-    header('Location: login.php');
-    exit();
-}
-
-// Check if product_id and quantity are set
-if (!isset($_POST['product_id'], $_POST['quantity'])) {
+$page_title = "Produto";
+include_once "layout/layout_header.php";
+include_once "fachada.php";
+if(!isset($_GET['id'])) {
     header('Location: produtos.php');
-    exit();
 }
-
 $id = $_GET['id'];
 
-// Obtém os detalhes do produto pelo ID
+$supplierDao = $factory->getSupplierDao();
+$suppliers = $supplierDao->getSuppliersOptionList();
+
 $productDao = $factory->getProductDao();
 $product = $productDao->getById($id);
-
-// Verifica se o produto existe
-if (!$product) {
-    header('Location: produtos.php');
-    exit();
-}
-
-// Obtém o fornecedor e o estoque do produto
 $supplier = $product->getSupplier();
 $stock = $product->getStock();
 
@@ -58,7 +42,8 @@ $stock = $product->getStock();
     </div>
 </div>
 
+
 <?php
-// Inclui o rodapé do layout
+// layout do rodapé
 include_once "layout/layout_footer.php";
 ?>

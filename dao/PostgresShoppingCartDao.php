@@ -1,9 +1,7 @@
 <?php
-include_once('ShoppingCartDao.php');
-include_once('PostgresDao.php');
 include_once('model/ShoppingCart.php');
 
-class PostgresShoppingCartDao extends PostgresDao implements ShoppingCartDao {
+class PostgresShoppingCartDao extends PostgresDao {
 
     private $table_name = 'shopping_cart';
 

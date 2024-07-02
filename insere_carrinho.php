@@ -5,7 +5,7 @@ session_start();
 
 // Check if product_id and quantity are set
 if (!isset($_POST['product_id'], $_POST['quantity'])) {
-    header('Location: produtos.php');
+    header('Location: carrinho.php');
     exit();
 }
 
@@ -16,7 +16,7 @@ $quantity = intval($_POST['quantity']); // Ensure quantity is an integer
 // Validate inputs (basic validation example)
 if ($quantity <= 0) {
     // Handle invalid quantity (redirect or error message)
-    header('Location: produtos.php');
+    header('Location: carrinho.php');
     exit();
 }
 
@@ -31,11 +31,6 @@ $success = $shoppingCartDao->insert($shoppingCart);
 // Check if insertion was successful
 if ($success) {
     // Redirect to cart or product page
-    header('Location: produtos.php');
+    header('Location: carrinho.php');
     exit();
-} else {
-    // Handle insertion failure (redirect or error message)
-    header('Location: produtos.php');
-    exit();
-}
-?>
+}?>
