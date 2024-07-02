@@ -93,6 +93,11 @@ $stock = $product->getStock();
 
 <div class="container mt-4">
     <div class="row">
+        <div class="col">
+            <a class='btn btn-secondary btn-sm mb-3' href='index.php'>Voltar</a>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-6">
             <img src="https://via.placeholder.com/400" class="img-fluid rounded" alt="Imagem do Produto">
         </div>
