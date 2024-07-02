@@ -29,7 +29,7 @@ include_once "layout/layout_header.php";
                                     <input type="text" class="form-control text-center" value="<?php echo $item['quantity']; ?>">
                                     <button class="btn btn-outline-secondary" type="button">+</button>
                                 </div>
-                                <form method="post" action="remover_do_carrinho.php">
+                                <form method="post" action="excluir_carrinho.php">
                                     <input type="hidden" name="product_id" value="<?php echo $item['id']; ?>">
                                     <button type="submit" class="btn btn-outline-danger">Remover <i class="fas fa-trash-alt"></i></button>
                                 </form>
